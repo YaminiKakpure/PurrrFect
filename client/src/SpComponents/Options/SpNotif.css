@@ -1,0 +1,159 @@
+/* SpNotif.css - Desktop Styles */
+
+.sp-notif-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #333;
+}
+
+/* App Bar */
+.sp-app-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.sp-app-bar h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.5rem;
+  transition: all 0.2s;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+  color: #f08a4d;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.delete-button:hover {
+  background-color: #f5f5f5;
+  color: #dc3545;
+}
+
+.delete-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Notifications List */
+.sp-notifications-list {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.notification-card {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notification-card:hover {
+  background-color: #f9f9f9;
+}
+
+.notification-card.unread {
+  background-color: #f8f9fa;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+  color: #f08a4d;
+}
+
+.notification-details {
+  flex-grow: 1;
+}
+
+.notification-details h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+  color: #222;
+}
+
+.notification-details p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.notification-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.delete-notification {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+  padding: 0 0.3rem;
+}
+
+.delete-notification:hover {
+  color: #dc3545;
+}
+
+/* Empty State */
+.no-notifications {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.no-notifications p {
+  margin: 0.5rem 0;
+}
+
+/* Loading State */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(240, 138, 77, 0.2);
+  border-top: 4px solid #f08a4d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,88 @@
+/* Start.css - Enhanced Zoom Animation */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --primary-color: #f08a4d;
+  --secondary-background: white;
+  --zoom-duration: 0.7s;
+  --hold-duration: 2s;
+  --fade-duration: 0.8s;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--secondary-background);
+}
+
+.start-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.logo {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  object-fit: contain;
+  transform: scale(0.3);
+  opacity: 0;
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.1));
+  transition: 
+    transform var(--zoom-duration) cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity calc(var(--zoom-duration) * 0.8) ease-out;
+}
+
+.logo.show {
+  transform: scale(1);
+  opacity: 1;
+  animation: 
+    subtlePulse 3s ease-in-out infinite,
+    softGlow 2.5s ease-in-out infinite alternate;
+}
+
+.fade-out .logo {
+  transform: scale(1.2);
+  opacity: 0;
+  transition: 
+    transform var(--fade-duration) ease-out,
+    opacity var(--fade-duration) ease-in;
+}
+
+/* Animations */
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes softGlow {
+  0% { filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.15)); }
+  100% { filter: drop-shadow(0 6px 18px rgba(255, 255, 255, 0.25)); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .logo {
+    max-width: 85vw;
+  }
+  
+  :root {
+    --zoom-duration: 0.6s;
+  }
+}
+
+@media (min-width: 1200px) {
+  .logo {
+    max-width: 700px;
+  }
+}

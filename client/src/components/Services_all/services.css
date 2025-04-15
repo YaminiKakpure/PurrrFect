@@ -1,0 +1,421 @@
+/* services.css - Completely Revamped */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Base Container */
+.service-container {
+    font-family: 'Poppins', sans-serif;
+    max-width: 1400px;
+    width: 1350px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+/* App Bar - Modern Design */
+.service-appbar {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 18px 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    /* border: 1px solid #e2e8f0; */
+}
+
+.service-appbar button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 20px;
+    color: #4a5568;
+    transition: all 0.2s ease;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.service-appbar button:hover {
+    background-color: #ffffff;
+    color: #ff7e5f;
+}
+
+.service-appbar h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* Banner - Fixed Visibility Issue */
+.service-banner {
+    background-image: var(--banner-image);
+    background-size: contain;
+    background-position: center;
+    color: white;
+    padding: 100px 40px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.service-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.service-banner h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    line-height: 1.2;
+}
+
+.service-banner p {
+    font-size: 1.25rem;
+    margin: 0;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+}
+
+/* Search Section - Modern Design */
+.service-search-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.service-search-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.service-search-bar:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.service-search-bar i {
+    font-size: 18px;
+    color: #64748b;
+    margin-right: 15px;
+}
+
+.service-search-bar input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    flex: 1;
+    background: transparent;
+    color: #1e293b;
+}
+
+.service-search-bar input::placeholder {
+    color: #94a3b8;
+}
+
+/* Filter Dropdown - Modern Design */
+/* Filter Dropdown - Centered Modern Design */
+.service-filter-dropdown {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 30px;
+    padding: 12px 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    font-size: 16px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 15px;
+    transition: all 0.3s ease;
+    color: #334155;
+    display: block; /* Ensure it's treated as a block element */
+    text-align: center; /* Center the text */
+}
+
+.service-filter-dropdown:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* If you want to center it within a flex container */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Service Cards - Modern Design */
+.service-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-width: 800px;
+    margin: 0 auto 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.service-info {
+    display: flex;
+    padding: 25px;
+    align-items: center;
+}
+
+.service-info img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 25px;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-info-content {
+    flex: 1;
+}
+
+.service-info h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #1e293b;
+}
+
+.service-info p {
+    font-size: 1rem;
+    color: #64748b;
+    margin: 0 0 12px 0;
+}
+
+.service-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.service-rating i {
+    color: #f59e0b;
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.service-rating span {
+    font-size: 0.9rem;
+    color: #475569;
+    margin-right: 15px;
+}
+
+.service-details {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 25px;
+    background: #ffffff;
+    border-top: 1px solid #ffffff;
+}
+
+.service-location, .service-price {
+    display: flex;
+    align-items: center;
+}
+
+.service-location i, .service-price i {
+    color: #64748b;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.service-location span, .service-price span {
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.service-card button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(to right, #f08a4d, #f78551);
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0 0 12px 12px;
+}
+
+.service-card button:hover {
+    background: #ffad99;
+}
+
+/* Loading State */
+.loading-spinner {
+    border: 4px solid rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #3b82f6;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 100px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-message {
+    text-align: center;
+    padding: 30px;
+    color: #dc2626;
+    font-size: 18px;
+    font-weight: 500;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin: 50px auto;
+    border: 1px solid #fecaca;
+}
+
+/* No Services */
+.no-services {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin: 30px auto;
+    border: 1px solid #e2e8f0;
+}
+
+.no-services p {
+    font-size: 18px;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .service-container {
+        width: auto;
+        padding: 20px 30px;
+    }
+    
+    .service-banner h2 {
+        font-size: 2.4rem;
+    }
+    
+    .service-banner p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-container {
+        padding: 20px;
+    }
+    
+    .service-appbar {
+        padding: 15px 20px;
+    }
+    
+    .service-appbar h1 {
+        font-size: 20px;
+    }
+    
+    .service-banner {
+        padding: 80px 20px;
+        min-height: 250px;
+    }
+    
+    .service-banner h2 {
+        font-size: 2rem;
+    }
+    
+    .service-info {
+        padding: 20px;
+    }
+    
+    .service-info img {
+        width: 100px;
+        height: 100px;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .service-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .service-info img {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .service-rating {
+        justify-content: center;
+    }
+    
+    .service-details {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .service-banner {
+        padding: 60px 20px;
+    }
+    
+    .service-banner h2 {
+        font-size: 1.8rem;
+    }
+}

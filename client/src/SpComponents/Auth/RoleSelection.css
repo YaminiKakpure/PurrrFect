@@ -1,0 +1,119 @@
+/* RoleSelection.css - Minimalist & Responsive */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.role-selection-container {
+  --primary-color: #f08a4d;
+  --text-color: #333;
+  --transition-speed: 0.3s;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: white;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.role-selection-card {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.role-selection-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.role-selection-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.role-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.role-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  border: 2px solid transparent;
+}
+
+.owner-button {
+  background-color: white;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.provider-button {
+  background-color: white;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.role-icon {
+  font-size: 1.4rem;
+}
+
+.role-text {
+  flex-grow: 1;
+  text-align: center;
+}
+
+/* Hover Effects */
+.owner-button:hover {
+  transform: translateY(-2px);
+  background-color: #fff9f5;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.provider-button:hover {
+  transform: translateY(-2px);
+  background-color: #fff9f5;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .role-selection-card {
+    padding: 30px 20px;
+  }
+  
+  .role-selection-title {
+    font-size: 1.7rem;
+  }
+  
+  .role-button {
+    padding: 16px;
+  }
+}
+
+/* Focus States for Accessibility */
+.role-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(240, 138, 77, 0.4);
+}

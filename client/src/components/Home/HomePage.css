@@ -1,0 +1,394 @@
+/* HomePage.css - Side Drawer Style */
+
+/* Base Container */
+.home-page-container {
+    min-height: 100vh;
+    background: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    /* overflow-x: hidden; */
+  }
+  
+  /* App Header */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    color: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .app-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+  }
+  
+  .app-bar-action {
+    background: #f08a4d;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.3s ease;
+  }
+  
+  .app-bar-action:hover {
+    transform: scale(1.1);
+    background: #e07b3d;
+  }
+  
+  /* Side Drawer */
+  /* App Header - Hidden when drawer is open */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    color: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .drawer.open ~ .app-header {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .app-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000000;
+  }
+  
+  .app-bar-action {
+    background: #f08a4d;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.3s ease;
+  }
+  
+  .app-bar-action:hover {
+    transform: scale(1.1);
+    background: #e07b3d;
+  }
+  
+  /* Side Drawer - Overlay Style */
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    transition: right 0.3s ease;
+  }
+  
+  .drawer.open {
+    right: 0;
+  }
+  
+  .drawer-content {
+    padding: 2rem;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+    max-width: 300px;
+    margin-left: auto;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+  }
+  
+  .close-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #f5f5f5;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .close-icon:hover {
+    background: #f08a4d;
+    color: white;
+  }
+  
+  .close-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #f5f5f5;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .close-icon:hover {
+    background: #f08a4d;
+    color: white;
+  }
+  
+  /* User Profile */
+  .user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .profile-image-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1rem;
+  }
+  
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .profile-details {
+    flex: 1;
+  }
+  
+  .profile-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #333;
+  }
+  
+  .profile-edit {
+    color: #f08a4d;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .profile-edit:hover {
+    color: #e07b3d;
+  }
+  
+  .divider {
+    height: 1px;
+    background: #eee;
+    margin: 1rem 0;
+  }
+  
+  /* Navigation Items */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    color: #333;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-item:hover {
+    color: #f08a4d;
+  }
+  
+  .nav-item i {
+    margin-right: 1rem;
+    width: 20px;
+    text-align: center;
+  }
+  
+  /* Main Content */
+  .main-content {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    transition: margin-right 0.3s ease;
+  }
+  
+  .drawer.open ~ .main-content {
+    margin-right: 300px;
+  }
+  
+  .location-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .location-text {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+  
+  .change-text {
+    color: #6a5fff;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .change-text:hover {
+    color: #5a4fe0;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .welcome-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .welcome-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+  
+  .welcome-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    /* box-shadow: 0 5px 15px rgba(0,0,0,0.1); */
+  }
+  
+  /* Service Cards */
+  .service-cards {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .service-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .service-content {
+    padding: 1.5rem;
+  }
+  
+  .service-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+  }
+  
+  .service-description {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .service-image-container {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .service-card:hover .service-image {
+    transform: scale(1.05);
+  }
+  
+  /* Overlay for drawer */
+  .drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .drawer.open + .drawer-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    .main-content {
+      padding: 2rem;
+    }
+    
+    .service-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .service-cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .drawer {
+      width: 350px;
+    }
+    
+    .drawer.open ~ .main-content {
+      margin-right: 350px;
+    }
+  }

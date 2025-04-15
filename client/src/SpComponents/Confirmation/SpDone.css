@@ -1,0 +1,69 @@
+.endPageContent {
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.checkmarkCircle {
+    width: 120px;
+    height: 120px;
+    background-color: #f8b195; /* Light orange */
+    border: 4px solid #f08e67; /* Green border */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+}
+
+.checkmarkCircle i {
+    font-size: 64px;
+    color: #ffffff; /* White checkmark */
+}
+
+.successTitle {
+    font-size: 32px;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.successMessage {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+.homeButton {
+    background-color: transparent;
+    border: 1px solid #666;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.homeButton i {
+    font-size: 40px;
+    color: #666;
+}
+
+.backToHomeButton {
+    background-color: #ffffff;
+    border: 1px solid #666;
+    border-radius: 14px;
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+}
