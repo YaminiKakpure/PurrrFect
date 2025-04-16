@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SpTrans.css";
+import { Clock, Calendar, User, CreditCard, DollarSign, CheckCircle, XCircle } from "lucide-react";
+import { ChevronLeft } from 'lucide-react';
 
 const SpTrans = () => {
   const navigate = useNavigate();
@@ -8,72 +10,42 @@ const SpTrans = () => {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     timePeriod: 'month',
-    amountRange: 'all',
+    paymentMethod: 'all',
     status: 'all'
-  });
-  const [stats, setStats] = useState({
-    totalEarnings: 0,
-    monthlyEarnings: 0,
-    pendingPayments: 0,
-    growthPercentage: 0
   });
 
   // Fetch transactions from localStorage
   useEffect(() => {
     const fetchData = () => {
       try {
-        // Get transactions from bookings (both online and cash)
         const storedBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
         const currentUserId = localStorage.getItem('userId');
         
-        // Filter bookings for this provider and map to transactions
+        // Process transactions from bookings
         const providerTransactions = storedBookings
-          .filter(booking => booking.provider.id === currentUserId)
+          .filter(booking => booking.provider?.id === currentUserId)
           .map(booking => ({
             id: booking.id,
-            customer: booking.customerName || 'Customer',
-            service: booking.service.name,
+            transactionId: booking.paymentId || `cash-${booking.id}`,
+            customer: {
+              name: booking.user?.name || 'Pet Owner',
+              phone: booking.user?.phone || 'Not provided',
+              email: booking.user?.email || 'Not provided'
+            },
+            pet: {
+              name: booking.pet?.name || 'Pet',
+              breed: booking.pet?.breed || 'Unknown breed'
+            },
+            service: booking.service?.name || 'Service',
             date: booking.date,
-            amount: booking.amount || booking.service.price,
+            time: booking.time,
+            amount: booking.amount || booking.service?.price || 0,
             status: booking.paymentStatus || (booking.paymentMethod === 'online' ? 'paid' : 'pending'),
             method: booking.paymentMethod || 'cash',
             bookingStatus: booking.status
           }));
         
-        // Add standalone payments if they exist
-        const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory')) || [];
-        const providerPayments = paymentHistory
-          .filter(payment => payment.providerId === currentUserId)
-          .map(payment => ({
-            id: payment.paymentId,
-            customer: payment.customerName || 'Customer',
-            service: payment.service,
-            date: payment.date,
-            amount: payment.amount,
-            status: 'paid',
-            method: 'online',
-            bookingStatus: 'completed'
-          }));
-        
-        const allTransactions = [...providerTransactions, ...providerPayments];
-        setTransactions(allTransactions);
-
-        // Calculate stats
-        const total = allTransactions.reduce((sum, t) => t.status === 'paid' ? sum + t.amount : sum, 0);
-        const monthly = allTransactions
-          .filter(t => new Date(t.date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-          .reduce((sum, t) => t.status === 'paid' ? sum + t.amount : sum, 0);
-        const pending = allTransactions.filter(t => t.status === 'pending').length;
-        
-        // Simple growth calculation (for demo)
-        const growth = monthly > 0 ? ((monthly / (total - monthly)) * 100 ): 0;
-
-        setStats({
-          totalEarnings: total,
-          monthlyEarnings: monthly,
-          pendingPayments: pending,
-          growthPercentage: growth.toFixed(1)
-        });
+        setTransactions(providerTransactions);
       } catch (error) {
         console.error("Error loading transactions:", error);
       } finally {
@@ -82,12 +54,8 @@ const SpTrans = () => {
     };
 
     fetchData();
-    
-    // Set up storage event listener to sync across tabs
-    const handleStorageChange = () => fetchData();
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', fetchData);
+    return () => window.removeEventListener('storage', fetchData);
   }, []);
 
   const handleFilterChange = (filterType, value) => {
@@ -116,12 +84,8 @@ const SpTrans = () => {
       return false;
     }
     
-    // Amount range filter
-    if (filters.amountRange === 'gt1000' && transaction.amount <= 1000) {
-      return false;
-    }
-    
-    if (filters.amountRange === 'lt1000' && transaction.amount >= 1000) {
+    // Payment method filter
+    if (filters.paymentMethod !== 'all' && transaction.method !== filters.paymentMethod) {
       return false;
     }
     
@@ -133,84 +97,118 @@ const SpTrans = () => {
     return true;
   });
 
+  // Calculate statistics
+  const stats = {
+    totalEarnings: transactions
+      .filter(t => t.status === 'paid')
+      .reduce((sum, t) => sum + t.amount, 0),
+    pendingPayments: transactions.filter(t => t.status === 'pending').length,
+    onlinePayments: transactions.filter(t => t.method === 'online').length,
+    cashPayments: transactions.filter(t => t.method === 'cash').length
+  };
+
   const formatDate = (dateString) => {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-IN', options);
+  };
+
+  const formatTime = (timeString) => {
+    return timeString || '--:--';
   };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
+      minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'paid': return <CheckCircle size={16} color="#4CAF50" />;
+      case 'pending': return <Clock size={16} color="#FF9800" />;
+      default: return <XCircle size={16} color="#F44336" />;
+    }
+  };
+
+  const getPaymentMethodIcon = (method) => {
+    switch (method) {
+      case 'online': return <CreditCard size={16} />;
+      case 'cash': return <DollarSign size={16} />;
+      default: return <CreditCard size={16} />;
+    }
+  };
+
   if (loading) {
     return (
-      <div className="sp-trans-page">
-        <div className="sp-app-bar">
-          <button className="back-button" onClick={() => navigate(-1)}>
-            ←
-          </button>
-          <h1>Transactions</h1>
-        </div>
-        <div className="loading-spinner"></div>
+      <div className="sp-trans-loading">
+        <div className="spinner"></div>
+        <p>Loading transactions...</p>
       </div>
     );
   }
 
   return (
-    <div className="sp-trans-page">
-      {/* App Bar */}
-      <div className="sp-app-bar">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ←
+    <div className="sp-trans-container">
+      {/* Header */}
+      <div className="sp-trans-header">
+        <button onClick={() => navigate(-1)} className="back-button">
+          <ChevronLeft size={24} />
         </button>
-        <h1>Transactions</h1>
+        <h1>Payment Transactions</h1>
       </div>
 
-      {/* Hero Section */}
-      <div className="sp-hero-section">
-        <h2>Your earnings so far!</h2>
-        <p>{formatCurrency(stats.totalEarnings)}</p>
-        <span className={stats.growthPercentage >= 0 ? 'positive' : 'negative'}>
-          {stats.growthPercentage >= 0 ? '↑' : '↓'} {Math.abs(stats.growthPercentage)}% from last month
-        </span>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>This Month</h3>
-            <p>{formatCurrency(stats.monthlyEarnings)}</p>
+      {/* Stats Overview */}
+      <div className="sp-trans-stats">
+        <div className="stat-card total-earnings">
+          <h3>Total Earnings</h3>
+          <p>{formatCurrency(stats.totalEarnings)}</p>
+        </div>
+        <div className="stat-card pending-payments">
+          <h3>Pending Payments</h3>
+          <p>{stats.pendingPayments}</p>
+        </div>
+        <div className="stat-card payment-methods">
+          <div>
+            <CreditCard size={16} />
+            <span>{stats.onlinePayments} online</span>
           </div>
-          <div className="stat-card">
-            <h3>Pending</h3>
-            <p>{stats.pendingPayments} payments</p>
+          <div>
+            <DollarSign size={16} />
+            <span>{stats.cashPayments} cash</span>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="sp-filters">
+      <div className="sp-trans-filters">
         <select 
           value={filters.timePeriod}
           onChange={(e) => handleFilterChange('timePeriod', e.target.value)}
+          className="filter-select"
         >
           <option value="today">Today</option>
           <option value="week">This Week</option>
           <option value="month">This Month</option>
           <option value="all">All Time</option>
         </select>
+        
         <select
-          value={filters.amountRange}
-          onChange={(e) => handleFilterChange('amountRange', e.target.value)}
+          value={filters.paymentMethod}
+          onChange={(e) => handleFilterChange('paymentMethod', e.target.value)}
+          className="filter-select"
         >
-          <option value="all">All Amounts</option>
-          <option value="gt1000">&gt; ₹1000</option>
-          <option value="lt1000">&lt; ₹1000</option>
+          <option value="all">All Methods</option>
+          <option value="online">Online</option>
+          <option value="cash">Cash</option>
         </select>
+        
         <select
           value={filters.status}
           onChange={(e) => handleFilterChange('status', e.target.value)}
+          className="filter-select"
         >
           <option value="all">All Statuses</option>
           <option value="paid">Completed</option>
@@ -219,26 +217,61 @@ const SpTrans = () => {
       </div>
 
       {/* Transactions List */}
-      <div className="sp-transactions-list">
+      <div className="sp-trans-list">
         {filteredTransactions.length > 0 ? (
           filteredTransactions.map(transaction => (
-            <div className="transaction-card" key={transaction.id}>
-              <div className="transaction-info">
-                <div className="transaction-icon">
-                  {transaction.method === 'online' ? '💳' : '💵'}
+            <div key={transaction.id} className="transaction-card">
+              <div className="transaction-header">
+                <div className="user-info">
+                  <div className="user-avatar">
+                    <User size={20} />
+                  </div>
+                  <div>
+                    <h3>{transaction.customer.name}</h3>
+                    <p className="pet-info">
+                      {transaction.pet.name} • {transaction.pet.breed}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3>{transaction.customer}</h3>
-                  <p>{transaction.service}</p>
-                  <span>{formatDate(transaction.date)}</span>
+                <div className="transaction-amount">
+                  {formatCurrency(transaction.amount)}
                 </div>
               </div>
-              <div className="transaction-amount">
-                <p>{formatCurrency(transaction.amount)}</p>
-                <span className={`status ${transaction.status}`}>
-                  {transaction.status === 'paid' ? 'Completed' : 'Pending'}
-                  {transaction.bookingStatus === 'cancelled' && ' (Cancelled)'}
-                </span>
+              
+              <div className="transaction-details">
+                <div className="detail-row">
+                  <span className="detail-label">
+                    <Calendar size={14} /> Date:
+                  </span>
+                  <span>{formatDate(transaction.date)} at {formatTime(transaction.time)}</span>
+                </div>
+                
+                <div className="detail-row">
+                  <span className="detail-label">
+                    {getPaymentMethodIcon(transaction.method)} Method:
+                  </span>
+                  <span>
+                    {transaction.method === 'online' ? 'Online Payment' : 'Cash Payment'}
+                    {transaction.method === 'online' && transaction.transactionId && (
+                      <span className="transaction-id">ID: {transaction.transactionId}</span>
+                    )}
+                  </span>
+                </div>
+                
+                <div className="detail-row">
+                  <span className="detail-label">
+                    {getStatusIcon(transaction.status)} Status:
+                  </span>
+                  <span className={`status ${transaction.status}`}>
+                    {transaction.status === 'paid' ? 'Completed' : 'Pending'}
+                    {transaction.bookingStatus === 'cancelled' && ' (Booking Cancelled)'}
+                  </span>
+                </div>
+                
+                <div className="detail-row">
+                  <span className="detail-label">Service:</span>
+                  <span>{transaction.service}</span>
+                </div>
               </div>
             </div>
           ))

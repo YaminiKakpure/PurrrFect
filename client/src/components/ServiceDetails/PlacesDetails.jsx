@@ -226,10 +226,10 @@ const PlaceDetails = () => {
       </div>
 
       {/* Call to Action */}
-      <div className="ctaSection">
+      {/* <div className="ctaSection">
         <button className="primaryButton">Get Directions</button>
         <button className="secondaryButton">Share This Place</button>
-      </div>
+      </div> */}
     </div>
   );
 };

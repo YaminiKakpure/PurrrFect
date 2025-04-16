@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SpNotif.css";
+import { ChevronLeft } from 'lucide-react';
 
 const SpNotif = () => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const SpNotif = () => {
       <div className="sp-notif-page">
         <div className="sp-app-bar">
           <button className="back-button" onClick={() => navigate(-1)}>
-            ←
+            <ChevronLeft size={24} />
           </button>
           <h1>Notifications</h1>
           <button className="delete-button">🗑️</button>
@@ -87,7 +88,7 @@ const SpNotif = () => {
       {/* App Bar */}
       <div className="sp-app-bar">
         <button className="back-button" onClick={() => navigate(-1)}>
-          ←
+          <ChevronLeft size={24} />
         </button>
         <h1>Notifications</h1>
         <button 

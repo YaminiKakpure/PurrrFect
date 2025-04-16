@@ -18,111 +18,138 @@ const ConfirmationPage = () => {
         },
         error: null,
         paymentStatus: null,
-        paymentMethod: 'online' // 'online' or 'cash'
+        paymentMethod: 'online'
     });
 
+    // Enhanced Razorpay loading with retry mechanism
     useEffect(() => {
-        console.log('[DEBUG] Component mounted, loading Razorpay');
-
-        const loadRazorpay = async () => {
+        const loadRazorpay = async (attempt = 1) => {
             if (window.Razorpay) {
-                console.log('[DEBUG] Razorpay already loaded');
                 setState(prev => ({ ...prev, razorpayReady: true }));
                 return true;
             }
 
-            console.log('[DEBUG] Loading Razorpay script');
             return new Promise((resolve) => {
                 const script = document.createElement('script');
                 script.src = 'https://checkout.razorpay.com/v1/checkout.js';
                 script.async = true;
                 script.onload = () => {
-                    console.log('[DEBUG] Razorpay script loaded successfully');
                     setState(prev => ({ ...prev, razorpayReady: true }));
                     resolve(true);
                 };
                 script.onerror = () => {
-                    console.error('[DEBUG] Razorpay script failed to load');
-                    setState(prev => ({ ...prev, razorpayReady: false }));
-                    resolve(false);
+                    if (attempt < 3) {
+                        setTimeout(() => resolve(loadRazorpay(attempt + 1)), 1000 * attempt);
+                    } else {
+                        setState(prev => ({
+                            ...prev,
+                            error: 'Payment system failed to load. Please refresh the page.'
+                        }));
+                        resolve(false);
+                    }
                 };
                 document.body.appendChild(script);
             });
         };
 
-        const fetchBookingData = async () => {
-            try {
-                const { service, selectedService, date, time } = locationState || {};
-                
-                if (!service || !date || !time || !selectedService) {
-                    throw new Error('Missing booking information');
-                }
-
-                setState(prev => ({
-                    ...prev,
-                    bookingDetails: {
-                        provider: service,
-                        selectedService,
-                        date,
-                        time
-                    },
-                    loading: { ...prev.loading, page: false }
-                }));
-            } catch (err) {
-                console.error('Error fetching booking data:', err);
-                setState(prev => ({
-                    ...prev,
-                    error: err.message || 'Failed to load booking details',
-                    loading: { ...prev.loading, page: false }
-                }));
+        const validateBookingData = () => {
+            const { service, selectedService, date, time } = locationState || {};
+            const errors = [];
+            
+            if (!service) errors.push('Service provider not selected');
+            if (!selectedService) errors.push('Service not selected');
+            if (!date) errors.push('Date not selected');
+            if (!time) errors.push('Time not selected');
+            
+            if (errors.length > 0) {
+                throw new Error(errors.join(', '));
             }
+
+            return {
+                provider: service,
+                selectedService,
+                date,
+                time
+            };
         };
 
-        const loadAll = async () => {
+        const initializePage = async () => {
             try {
-                const [razorpayLoaded] = await Promise.all([
+                const [razorpayLoaded, bookingDetails] = await Promise.all([
                     loadRazorpay(),
-                    fetchBookingData()
+                    Promise.resolve(validateBookingData())
                 ]);
-                
-                if (!razorpayLoaded) {
-                    setState(prev => ({
-                        ...prev,
-                        error: 'Failed to load payment system. Please refresh the page.'
-                    }));
-                }
-            } catch (err) {
-                console.error('[DEBUG] Initialization error:', err);
+        
                 setState(prev => ({
                     ...prev,
-                    error: 'Failed to initialize. Please try again.'
+                    bookingDetails,
+                    razorpayReady: razorpayLoaded,  // <-- FIXED HERE
+                    loading: { ...prev.loading, page: false }
+                }));
+            } catch (error) {
+                console.error('Initialization error:', error);
+                setState(prev => ({
+                    ...prev,
+                    error: error.message,
+                    loading: { ...prev.loading, page: false }
                 }));
             }
         };
 
-        loadAll();
+        initializePage();
 
         return () => {
-            if (window.Razorpay) {
-                window.Razorpay = undefined;
+            // Cleanup
+            const razorpayScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+            if (razorpayScript && document.body.contains(razorpayScript)) {
+                document.body.removeChild(razorpayScript);
             }
+            window.Razorpay = undefined;
         };
     }, [locationState]);
 
-    const retryPayment = async () => {
-        setState(prev => ({ ...prev, error: null }));
-        await handlePayment();
-    };
-
     const calculateTotalAmount = () => {
         if (!state.bookingDetails) return 0;
-        const servicePrice = state.bookingDetails.selectedService.price;
-        const taxRate = 0.00; // Change this if you want to add taxes
-        return servicePrice * (1 + taxRate);
+        return Number(state.bookingDetails.selectedService.price);
     };
 
     const handlePaymentMethodChange = (method) => {
         setState(prev => ({ ...prev, paymentMethod: method }));
+    };
+
+    const createBookingData = (paymentStatus, paymentMethod) => {
+        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        
+        return {
+            id: `booking-${Date.now()}`,
+            user: {
+                id: userData.id,
+                name: userData.name || 'Customer',
+                email: userData.email,
+                phone: userData.phone
+            },
+            provider: state.bookingDetails.provider,
+            service: state.bookingDetails.selectedService,
+            date: state.bookingDetails.date,
+            time: state.bookingDetails.time,
+            status: 'confirmed',
+            paymentStatus,
+            paymentMethod,
+            amount: calculateTotalAmount(),
+            createdAt: new Date().toISOString()
+        };
+    };
+
+    const saveBookingToLocalStorage = (bookingData) => {
+        try {
+            const existingBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
+            const updatedBookings = [...existingBookings, bookingData];
+            localStorage.setItem('petCareBookings', JSON.stringify(updatedBookings));
+            return bookingData;
+        } catch (error) {
+            console.error('Error saving booking:', error);
+            throw new Error('Failed to save booking');
+        }
     };
 
     const handleCashPayment = async () => {
@@ -132,40 +159,20 @@ const ConfirmationPage = () => {
                 loading: { ...prev.loading, cashPayment: true },
                 paymentStatus: 'processing'
             }));
-    
-            if (!state.bookingDetails) {
-                throw new Error('Booking details not loaded');
-            }
-    
-            const bookingData = {
-                id: `booking-${Date.now()}`,
-                provider: state.bookingDetails.provider,
-                service: state.bookingDetails.selectedService,
-                date: state.bookingDetails.date,
-                time: state.bookingDetails.time,
-                status: 'confirmed',
-                paymentStatus: 'pending',
-                amount: calculateTotalAmount(),
-                paymentMethod: 'cash'
-            };
-    
-            // Save to localStorage - ensure we're merging with existing bookings
-            const existingBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
-            const updatedBookings = [...existingBookings, bookingData];
-            localStorage.setItem('petCareBookings', JSON.stringify(updatedBookings));
-    
-            setState(prev => ({ ...prev, paymentStatus: 'completed' }));
-            
+
+            const bookingData = createBookingData('pending', 'cash');
+            const savedBooking = saveBookingToLocalStorage(bookingData);
+
             toast.success('Booking Confirmed! Pay at the time of service.');
             navigate('/end', { 
                 state: { 
-                    booking: bookingData,
+                    booking: savedBooking,
                     provider: state.bookingDetails.provider
                 } 
             });
         } catch (error) {
             console.error("Cash payment error:", error);
-            toast.error("Failed to confirm booking: " + error.message);
+            toast.error(error.message);
             setState(prev => ({
                 ...prev,
                 error: error.message,
@@ -178,8 +185,7 @@ const ConfirmationPage = () => {
     const handlePayment = async () => {
         try {
             if (!window.Razorpay) {
-                toast.error("Payment system is still loading. Please wait...");
-                return;
+                throw new Error("Payment system is not ready");
             }
 
             setState(prev => ({
@@ -188,14 +194,9 @@ const ConfirmationPage = () => {
                 paymentStatus: 'initiating'
             }));
 
-            if (!state.bookingDetails) {
-                throw new Error('Booking details not loaded');
-            }
+            const amount = Math.round(calculateTotalAmount() * 100); // Convert to paise
 
-            // Calculate total amount in paise (Razorpay expects amount in smallest currency unit)
-            const amount = Math.round(calculateTotalAmount());
-
-            // Step 1: Create an order on the backend
+            // Create order on backend
             const orderResponse = await fetch('http://localhost:3000/api/payments/create-order', {
                 method: 'POST',
                 headers: {
@@ -218,7 +219,7 @@ const ConfirmationPage = () => {
 
             const orderData = await orderResponse.json();
 
-            // Step 2: Configure Razorpay options
+            // Configure Razorpay options
             const options = {
                 key: 'rzp_test_zvUvHBloF8oAEy',
                 amount: orderData.order.amount,
@@ -227,9 +228,10 @@ const ConfirmationPage = () => {
                 description: `${state.bookingDetails.provider.service_title} Booking`,
                 order_id: orderData.order.id,
                 handler: async (response) => {
-                    setState(prev => ({ ...prev, paymentStatus: 'verifying' }));
                     try {
-                        // Step 3: Verify payment and save booking
+                        setState(prev => ({ ...prev, paymentStatus: 'verifying' }));
+                        
+                        // Verify payment
                         const verification = await fetch('http://localhost:3000/api/payments/verify', {
                             method: 'POST',
                             headers: {
@@ -256,30 +258,34 @@ const ConfirmationPage = () => {
                             throw new Error(verificationData.error || "Payment verification failed");
                         }
 
-                        // Save payment to history
-                        const paymentData = {
-                            service: state.bookingDetails.selectedService.name,
-                            amount: amount / 100,
-                            date: new Date().toISOString(),
-                            paymentId: response.razorpay_payment_id
-                        };
-                        const existingPayments = JSON.parse(localStorage.getItem('paymentHistory')) || [];
-                        localStorage.setItem('paymentHistory', JSON.stringify([...existingPayments, paymentData]));
-                    
-                        // Save booking
+                        // Create complete booking data
                         const bookingData = {
                             ...verificationData.booking,
-                            provider: state.bookingDetails.provider, // Make sure to include provider
-                            service: state.bookingDetails.selectedService, // Include service details
+                            user: JSON.parse(localStorage.getItem('userData')) || {},
+                            provider: state.bookingDetails.provider,
+                            service: state.bookingDetails.selectedService,
                             paymentMethod: 'online',
-                            paymentStatus: 'completed',
-                            status: 'confirmed'
+                            paymentStatus: 'paid',
+                            status: 'confirmed',
+                            paymentId: response.razorpay_payment_id
                         };
-                        const existingBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
-                        localStorage.setItem('petCareBookings', JSON.stringify([...existingBookings, bookingData]));
 
-                        setState(prev => ({ ...prev, paymentStatus: 'completed' }));
-                        
+                        // Save to local storage
+                        saveBookingToLocalStorage(bookingData);
+
+                        // Save to payment history
+                        const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory')) || [];
+                        localStorage.setItem('paymentHistory', JSON.stringify([
+                            ...paymentHistory,
+                            {
+                                id: response.razorpay_payment_id,
+                                amount: amount / 100,
+                                date: new Date().toISOString(),
+                                service: state.bookingDetails.selectedService.name,
+                                providerId: state.bookingDetails.provider.id
+                            }
+                        ]));
+
                         toast.success('Payment Successful!');
                         navigate('/end', { 
                             state: { 
@@ -301,7 +307,7 @@ const ConfirmationPage = () => {
                 prefill: {
                     name: localStorage.getItem('userName') || 'Customer',
                     email: localStorage.getItem('userEmail') || 'customer@example.com',
-                    contact: state.bookingDetails.provider.phone || '0000000000',
+                    contact: localStorage.getItem('userPhone') || '0000000000',
                 },
                 theme: {
                     color: "#4CAF50"
@@ -318,7 +324,6 @@ const ConfirmationPage = () => {
                 }
             };
 
-            // Step 4: Open Razorpay Payment UI
             const rzp = new window.Razorpay(options);
             rzp.open();
 
