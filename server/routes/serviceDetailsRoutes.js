@@ -3,35 +3,28 @@ const router = express.Router();
 const controller = require('../controllers/serviceDetailsController');
 const upload = require('../middlewares/uploadMiddleware');
 const { authenticate, authorize } = require('../middlewares/authMiddleware');
+const authenticateToken = require('../middlewares/authMiddleware');
 
-// Save draft
-router.post('/:id/draft', 
-  authenticate,
-  authorize('provider'),
+// Remove duplicate middleware (already applied through router.use)
+router.post('/:id/service-details', 
   upload.fields([
     { name: 'service_photos', maxCount: 5 },
     { name: 'service_video', maxCount: 1 }
   ]),
-  controller.saveDraft
+  controller.updateServiceDetails
 );
 
-// Complete registration (initiate payment)
-router.post('/:id/complete-registration',
-  authenticate,
-  authorize('provider'),
-  controller.completeRegistration
-);
-
-// Verify payment and finalize registration
-router.post('/:id/verify-payment',
-  authenticate,
-  authorize('provider'),
-  controller.verifyPayment
-);
-
-// Get service details
-router.get('/:id',
+router.get('/:id/service-details',
   controller.getServiceDetails
+);
+
+// Add new endpoint for payment-complete registration
+router.post('/:id/complete-registration',
+  upload.fields([
+    { name: 'service_photos', maxCount: 5 },
+    { name: 'service_video', maxCount: 1 }
+  ]),
+  controller.completeRegistration
 );
 
 module.exports = router;

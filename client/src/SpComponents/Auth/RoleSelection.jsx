@@ -26,11 +26,11 @@ const RoleSelection = () => {
         <div className="role-buttons-container">
           <button className="role-button owner-button" onClick={() => handleOwnerSelection("owner")}>
             <span className="role-icon">🐾</span>
-            <span className="role-text">I AM A PET OWNER</span>
+            <span className="role-text">I am a Pet Owner</span>
           </button>
           <button className="role-button provider-button" onClick={() => handleProviderSelection("provider")}>
             <span className="role-icon">🛠️</span>
-            <span className="role-text">I AM A SERVICE PROVIDER</span>
+            <span className="role-text">I am a Service Provider</span>
           </button>
         </div>
       </div>

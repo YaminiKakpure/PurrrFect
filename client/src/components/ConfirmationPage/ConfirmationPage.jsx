@@ -194,7 +194,7 @@ const ConfirmationPage = () => {
                 paymentStatus: 'initiating'
             }));
 
-            const amount = Math.round(calculateTotalAmount() * 100); // Convert to paise
+            const amount = Math.round(calculateTotalAmount()); // Convert to paise
 
             // Create order on backend
             const orderResponse = await fetch('http://localhost:3000/api/payments/create-order', {
@@ -260,14 +260,20 @@ const ConfirmationPage = () => {
 
                         // Create complete booking data
                         const bookingData = {
-                            ...verificationData.booking,
+                            id: `booking-${Date.now()}`,
+                            date: state.bookingDetails.date,
+                            time: state.bookingDetails.time,
                             user: JSON.parse(localStorage.getItem('userData')) || {},
                             provider: state.bookingDetails.provider,
                             service: state.bookingDetails.selectedService,
-                            paymentMethod: 'online',
-                            paymentStatus: 'paid',
                             status: 'confirmed',
-                            paymentId: response.razorpay_payment_id
+                            paymentStatus: 'paid',
+                            paymentMethod: 'online',
+                            amount: amount / 100,
+                            paymentId: response.razorpay_payment_id,
+                            createdAt: new Date().toISOString(),
+                            // Add pet information if available
+                            pet: JSON.parse(localStorage.getItem('selectedPet')) || null
                         };
 
                         // Save to local storage

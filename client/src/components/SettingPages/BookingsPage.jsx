@@ -16,6 +16,7 @@ const BookingsPage = () => {
                 setLoading(true);
                 const storedBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
                 console.log("Retrieved bookings:", storedBookings); // Add this line
+                console.log("Booking dates:", storedBookings.map(b => b.date));
                 setBookings(storedBookings);
                 setLoading(false);
             } catch (err) {
@@ -30,7 +31,14 @@ const BookingsPage = () => {
 
     const filteredBookings = bookings.filter(booking => {
         const now = new Date();
-        const bookingDate = new Date(booking.date);
+        // Handle both possible date locations
+        const bookingDate = new Date(booking.date || (booking.booking_data && booking.booking_data.date));
+        
+        if (isNaN(bookingDate)) {
+            console.error('Invalid date for booking:', booking);
+            return false;
+        }
+
         console.log("Processing booking:", booking); // Add this
         console.log("Booking date:", bookingDate, "Now:", now); // Add this
   

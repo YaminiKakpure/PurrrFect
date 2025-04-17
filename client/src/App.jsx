@@ -37,7 +37,6 @@ import SpTrans from "./SpComponents/Options/SpTrans";
 import SpProfile from "./SpComponents/Profile/SpProfile";
 import BookingsPage from "./components/SettingPages/BookingsPage";
 import BookingDetailsPage from "./components/SettingPages/BookingDetailsPage";
-import SpBasicInfo from "./SpComponents/SP_Details/SpBasicInfo";
 
 function App() {
   return (
@@ -82,7 +81,6 @@ function App() {
         <Route path="/SpBookings" element={<SpBookings/>} /> 
         <Route path="/SpNotif" element={<SpNotif/>} /> 
         <Route path="/SpTrans" element={<SpTrans/>} /> 
-        <Route path="/BasicF" element={<SpBasicInfo/>} /> 
         
       </Routes>
     </Router>

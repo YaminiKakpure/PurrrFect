@@ -29,6 +29,8 @@ const SpServiceDetails = () => {
   ]);
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [vetExperience, setVetExperience] = useState(null); // New state for vet experience
+  const [termsAccepted, setTermsAccepted] = useState(false); // New state for terms acceptance
   const [loading, setLoading] = useState(false);
 
   // Service type configurations
@@ -74,7 +76,6 @@ const SpServiceDetails = () => {
       ]
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -122,6 +123,10 @@ const SpServiceDetails = () => {
     setVideos([...videos, e.target.files[0]].slice(0, 1));
   };
 
+  const handleVetExperienceUpload = (e) => {
+    setVetExperience(e.target.files[0]);
+  };
+
   const removePhoto = (index) => {
     setPhotos(photos.filter((_, i) => i !== index));
   };
@@ -130,9 +135,18 @@ const SpServiceDetails = () => {
     setVideos([]);
   };
 
-  // Replace handleSubmit with this:
+  const removeVetExperience = () => {
+    setVetExperience(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!termsAccepted) {
+      toast.error("Please accept the terms and conditions");
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -142,7 +156,8 @@ const SpServiceDetails = () => {
         services,
         // Convert files to Base64
         service_photos: await Promise.all(photos.map(convertFileToBase64)),
-        service_video: videos[0] ? await convertFileToBase64(videos[0]) : null
+        service_video: videos[0] ? await convertFileToBase64(videos[0]) : null,
+        vet_experience: vetExperience ? await convertFileToBase64(vetExperience) : null
       };
 
       // Save to localStorage
@@ -155,19 +170,17 @@ const SpServiceDetails = () => {
     } finally {
       setLoading(false);
     }
-};
+  };
 
-// Add this helper function:
-const convertFileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-};
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
 
-  // ... (keep all your JSX render code exactly the same)
   return (
     <div className={styles.serviceDetailsContainer}>
       <div className={styles.appBar}>
@@ -230,6 +243,44 @@ const convertFileToBase64 = (file) => {
             className={`${styles.inputField} ${styles.textareaField}`}
           />
         </div>
+
+        {/* Veterinarian Experience Section (only shown for vet service) */}
+        {formData.service_type === "vet" && (
+          <div className={styles.formSection}>
+            <h3>Veterinarian Credentials</h3>
+            <div className={styles.uploadSection}>
+              <label>Upload Doctor's Experience Certificate (PDF)*</label>
+              <div className={styles.uploadBox}>
+                {vetExperience ? (
+                  <div className={styles.fileItem}>
+                    <span>{vetExperience.name}</span>
+                    <button 
+                      type="button" 
+                      onClick={removeVetExperience}
+                      className={styles.removeButton}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <label htmlFor="vetExperience" className={styles.uploadButton}>
+                      📄 Upload Certificate
+                    </label>
+                    <input
+                      id="vetExperience"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleVetExperienceUpload}
+                      style={{ display: 'none' }}
+                    />
+                  </>
+                )}
+              </div>
+              <p className={styles.helperText}>Please upload your veterinary license or experience certificate</p>
+            </div>
+          </div>
+        )}
 
         {/* Services Pricing Section */}
         <div className={styles.formSection}>
@@ -472,6 +523,25 @@ const convertFileToBase64 = (file) => {
           />
         </div>
 
+        {/* Terms and Conditions */}
+        <div className={styles.formSection}>
+          <div className={styles.termsContainer}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className={styles.checkboxInput}
+                required
+              />
+              <span>
+                I certify that all the information provided above is accurate and complete. 
+                I understand that providing false information may result in account suspension.
+              </span>
+            </label>
+          </div>
+        </div>
+
         {/* Submit Buttons */}
         <div className={styles.buttonContainer}>
           <button 
@@ -485,7 +555,7 @@ const convertFileToBase64 = (file) => {
           <button 
             type="submit" 
             className={styles.submitButton}
-            disabled={loading}
+            disabled={loading || !termsAccepted}
           >
             {loading ? "Saving..." : "Save"}
           </button>

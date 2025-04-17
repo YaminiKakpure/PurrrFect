@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, Upload, Plus } from 'lucide-react';
+import { X, ChevronLeft, Upload, Plus, Loader } from 'lucide-react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './PetProfile.css';
@@ -9,7 +9,8 @@ import './PetProfile.css';
 const PetProfile = () => {
   const navigate = useNavigate();
   const { petId } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   
   const initialFormData = {
@@ -20,7 +21,8 @@ const PetProfile = () => {
     gender: '',
     weight: '',
     medicalHistory: '',
-    profileImage: null
+    profileImage: null,
+    profileImageFile: null
   };
 
   const initialPreferences = {
@@ -29,7 +31,8 @@ const PetProfile = () => {
     sleepSchedule: '',
     medicalAllergies: '',
     specialInstructions: '',
-    bedPrescription: null
+    bedPrescription: null,
+    bedPrescriptionFile: null
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -44,28 +47,30 @@ const PetProfile = () => {
   // Load pet data
   useEffect(() => {
     const loadPetData = async () => {
-      if (!petId) return;
-
       setIsLoading(true);
       try {
         // Try local storage first
         const localPets = JSON.parse(localStorage.getItem('pets')) || [];
-        const localPet = localPets.find(p => p.id === petId);
+        const localPet = petId ? localPets.find(p => p.id === petId) : null;
 
         if (localPet) {
           setFormData({
-            name: localPet.name,
-            age: localPet.age,
-            species: localPet.species,
-            breed: localPet.breed,
-            gender: localPet.gender,
-            weight: localPet.weight,
-            medicalHistory: localPet.medicalHistory,
-            profileImage: localPet.profileImage
+            name: localPet.name || '',
+            age: localPet.age || '',
+            species: localPet.species || '',
+            breed: localPet.breed || '',
+            gender: localPet.gender || '',
+            weight: localPet.weight || '',
+            medicalHistory: localPet.medicalHistory || '',
+            profileImage: localPet.profileImage || null
           });
           setPreferences(localPet.preferences || initialPreferences);
-        } else {
+        } else if (petId) {
           await fetchPet();
+        } else {
+          // New pet - reset form
+          setFormData(initialFormData);
+          setPreferences(initialPreferences);
         }
       } catch (error) {
         toast.error(`Failed to load pet data: ${error.message}`);
@@ -85,13 +90,13 @@ const PetProfile = () => {
       const pet = await response.json();
       
       setFormData({
-        name: pet.name,
-        age: pet.age,
-        species: pet.species,
-        breed: pet.breed,
-        gender: pet.gender,
-        weight: pet.weight,
-        medicalHistory: pet.medicalHistory,
+        name: pet.name || '',
+        age: pet.age || '',
+        species: pet.species || '',
+        breed: pet.breed || '',
+        gender: pet.gender || '',
+        weight: pet.weight || '',
+        medicalHistory: pet.medicalHistory || '',
         profileImage: pet.profileImage 
           ? `http://localhost:3000${pet.profileImage}`
           : null
@@ -108,50 +113,55 @@ const PetProfile = () => {
 
   const updateLocalStorage = (pet) => {
     const localPets = JSON.parse(localStorage.getItem('pets')) || [];
-    const updatedPets = localPets.filter(p => p.id !== pet.id);
-    updatedPets.push(pet);
-    localStorage.setItem('pets', JSON.stringify(updatedPets));
+    const existingIndex = localPets.findIndex(p => p.id === pet.id);
+    
+    if (existingIndex >= 0) {
+      localPets[existingIndex] = pet;
+    } else {
+      localPets.push(pet);
+    }
+    
+    localStorage.setItem('pets', JSON.stringify(localPets));
   };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    if (file && file.size > 5 * 1024 * 1024) {
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
       toast.error('Image size should be less than 5MB');
       return;
     }
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData(prev => ({ ...prev, profileImage: e.target.result }));
-      };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFormData(prev => ({ 
+        ...prev, 
+        profileImage: e.target.result,
+        profileImageFile: file
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handlePrescriptionUpload = (file) => {
-    if (file && file.size > 10 * 1024 * 1024) {
-      toast.error('Prescription size should be less than 10MB');
-      return null;
-    }
-    return file;
+  const handleRemoveImage = () => {
+    setFormData(prev => ({ 
+      ...prev, 
+      profileImage: null,
+      profileImageFile: null
+    }));
   };
 
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      toast.error('Pet name is required');
-      return false;
-    }
-    if (!formData.species) {
-      toast.error('Please select a species');
-      return false;
-    }
-    if (!formData.gender) {
-      toast.error('Please select a gender');
-      return false;
-    }
-    if (!formData.weight) {
-      toast.error('Please select a weight range');
+    const errors = [];
+    
+    if (!formData.name.trim()) errors.push('Pet name is required');
+    if (!formData.species) errors.push('Please select a species');
+    if (!formData.gender) errors.push('Please select a gender');
+    if (!formData.weight) errors.push('Please select a weight range');
+    
+    if (errors.length > 0) {
+      errors.forEach(error => toast.error(error));
       return false;
     }
     return true;
@@ -162,37 +172,32 @@ const PetProfile = () => {
     
     if (!validateForm()) return;
     
-    setIsLoading(true);
+    setIsSubmitting(true);
     
     try {
       const formDataToSend = new FormData();
       
-      // Append form data
+      // Append basic information
       Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null && key !== 'profileImage') {
+        if (value !== null && key !== 'profileImage' && key !== 'profileImageFile') {
           formDataToSend.append(key, value);
         }
       });
       
       // Append preferences
       Object.entries(preferences).forEach(([key, value]) => {
-        if (value !== null && key !== 'bedPrescription') {
-          formDataToSend.append(key, value);
+        if (value !== null && key !== 'bedPrescription' && key !== 'bedPrescriptionFile') {
+          formDataToSend.append(`preferences[${key}]`, value);
         }
       });
       
-      // Handle file uploads
-      const imageInput = document.getElementById('pet-image-upload');
-      if (imageInput?.files[0]) {
-        formDataToSend.append('profileImage', imageInput.files[0]);
+      // Append files
+      if (formData.profileImageFile) {
+        formDataToSend.append('profileImage', formData.profileImageFile);
       }
       
-      const prescriptionInput = document.getElementById('prescription-upload');
-      if (prescriptionInput?.files[0]) {
-        const validFile = handlePrescriptionUpload(prescriptionInput.files[0]);
-        if (validFile) {
-          formDataToSend.append('prescription', validFile);
-        }
+      if (preferences.bedPrescriptionFile) {
+        formDataToSend.append('prescription', preferences.bedPrescriptionFile);
       }
       
       const method = petId ? 'PUT' : 'POST';
@@ -214,34 +219,29 @@ const PetProfile = () => {
       updateLocalStorage(savedPet);
       
       toast.success(`Pet profile ${petId ? 'updated' : 'created'} successfully`);
-
       
+      // For new pets, navigate to home or pet list
       if (!petId) {
-        // For new users after first pet creation
         navigate('/HomePage', { replace: true });
-      } else {
-        // For existing users editing profile
-        // Option 1: Stay on edit page
-        // Option 2: Go back to home
-        navigate('/HomePage');
       }
-
     } catch (error) {
       toast.error(error.message || 'An error occurred while saving');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const resetForm = () => {
-    setFormData(initialFormData);
-    setPreferences(initialPreferences);
+    if (window.confirm('Are you sure you want to reset all changes?')) {
+      setFormData(initialFormData);
+      setPreferences(initialPreferences);
+    }
   };
 
   if (isLoading) {
     return (
       <div className="pet-profile-loading">
-        <div className="loading-spinner"></div>
+        <Loader className="animate-spin" size={48} />
         <p>Loading pet data...</p>
       </div>
     );
@@ -253,7 +253,7 @@ const PetProfile = () => {
         <button 
           className="back-button"
           onClick={() => navigate(-1)}
-          aria-label="Go back"
+          disabled={isSubmitting}
         >
           <ChevronLeft size={24} />
         </button>
@@ -265,11 +265,20 @@ const PetProfile = () => {
           <label htmlFor="pet-image-upload" className="avatar-upload-label">
             <div className="avatar-preview">
               {formData.profileImage ? (
-                <img 
-                  src={formData.profileImage} 
-                  alt="Pet profile" 
-                  className="pet-avatar-image"
-                />
+                <div className="relative">
+                  <img 
+                    src={formData.profileImage} 
+                    alt="Pet profile" 
+                    className="pet-avatar-image"
+                  />
+                  <button 
+                    type="button"
+                    className="remove-image-btn"
+                    onClick={handleRemoveImage}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               ) : (
                 <div className="avatar-placeholder">
                   <Upload size={32} />
@@ -282,6 +291,7 @@ const PetProfile = () => {
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
+              disabled={isSubmitting}
               className="visually-hidden"
             />
           </label>
@@ -292,7 +302,7 @@ const PetProfile = () => {
             <h2>Basic Information</h2>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="name">Name *</label>
+                <label htmlFor="name">Name</label>
                 <input
                   id="name"
                   type="text"
@@ -319,7 +329,7 @@ const PetProfile = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="species">Species *</label>
+                <label htmlFor="species">Species</label>
                 <select
                   id="species"
                   name="species"
@@ -351,7 +361,7 @@ const PetProfile = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="gender">Gender *</label>
+                <label htmlFor="gender">Gender</label>
                 <select
                   id="gender"
                   name="gender"
@@ -362,11 +372,10 @@ const PetProfile = () => {
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="other">Other</option>
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="weight">Weight *</label>
+                <label htmlFor="weight">Weight</label>
                 <select
                   id="weight"
                   name="weight"
@@ -412,16 +421,21 @@ const PetProfile = () => {
               type="button"
               className="secondary-button"
               onClick={resetForm}
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
               Reset
             </button>
             <button
               type="submit"
               className="primary-button"
-              disabled={isLoading}
+              disabled={isSubmitting}
             >
-              {isLoading ? 'Saving...' : 'Save Profile'}
+              {isSubmitting ? (
+                <>
+                  <Loader className="animate-spin mr-2" size={18} />
+                  Saving...
+                </>
+              ) : 'Save Profile'}
             </button>
           </div>
         </form>
@@ -433,6 +447,7 @@ const PetProfile = () => {
             preferences={preferences}
             setPreferences={setPreferences}
             onClose={() => setIsPreferencesOpen(false)}
+            isSubmitting={isSubmitting}
           />
         )}
       </AnimatePresence>
@@ -440,16 +455,30 @@ const PetProfile = () => {
   );
 };
 
-const PreferencesModal = ({ preferences, setPreferences, onClose }) => {
+const PreferencesModal = ({ preferences, setPreferences, onClose, isSubmitting }) => {
   const [localPrefs, setLocalPrefs] = useState(preferences);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.size > 10 * 1024 * 1024) {
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
       toast.error('File size should be less than 10MB');
       return;
     }
-    setLocalPrefs(prev => ({ ...prev, bedPrescription: file }));
+    setLocalPrefs(prev => ({ 
+      ...prev, 
+      bedPrescription: URL.createObjectURL(file),
+      bedPrescriptionFile: file
+    }));
+  };
+
+  const handleRemovePrescription = () => {
+    setLocalPrefs(prev => ({ 
+      ...prev, 
+      bedPrescription: null,
+      bedPrescriptionFile: null
+    }));
   };
 
   const handleSave = () => {
@@ -475,7 +504,11 @@ const PreferencesModal = ({ preferences, setPreferences, onClose }) => {
       >
         <div className="modal-header">
           <h2>Pet Preferences</h2>
-          <button className="close-button" onClick={onClose}>
+          <button 
+            className="close-button" 
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
             <X size={24} />
           </button>
         </div>
@@ -552,6 +585,7 @@ const PreferencesModal = ({ preferences, setPreferences, onClose }) => {
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
                 onChange={handleFileChange}
+                disabled={isSubmitting}
                 className="visually-hidden"
               />
               <span className="file-upload-button">
@@ -560,20 +594,42 @@ const PreferencesModal = ({ preferences, setPreferences, onClose }) => {
                   : 'Upload Prescription'}
               </span>
               {localPrefs.bedPrescription && (
-                <span className="file-name">
-                  {localPrefs.bedPrescription.name}
-                </span>
+                <div className="file-preview">
+                  <span className="file-name">
+                    {localPrefs.bedPrescriptionFile?.name || 'Prescription'}
+                  </span>
+                  <button 
+                    type="button"
+                    className="remove-file-btn"
+                    onClick={handleRemovePrescription}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               )}
             </label>
           </div>
         </div>
 
         <div className="modal-actions">
-          <button className="secondary-button" onClick={onClose}>
+          <button 
+            className="secondary-button" 
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
             Cancel
           </button>
-          <button className="primary-button" onClick={handleSave}>
-            Save Preferences
+          <button 
+            className="primary-button" 
+            onClick={handleSave}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader className="animate-spin mr-2" size={18} />
+                Saving...
+              </>
+            ) : 'Save Preferences'}
           </button>
         </div>
       </motion.div>
