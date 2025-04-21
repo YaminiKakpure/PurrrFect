@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Start from "./components/Auth/Start"; // Import Start component
 import RoleSelection from "./SpComponents/Auth/RoleSelection";
 import AuthPage from "./components/Auth/AuthPage";
@@ -37,8 +38,25 @@ import SpTrans from "./SpComponents/Options/SpTrans";
 import SpProfile from "./SpComponents/Profile/SpProfile";
 import BookingsPage from "./components/SettingPages/BookingsPage";
 import BookingDetailsPage from "./components/SettingPages/BookingDetailsPage";
+import ProviderLayout from "./SpComponents/Home/ProviderLayout";
 
 function App() {
+
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    // Initialize user name from localStorage
+    const providerData = localStorage.getItem("provider");
+    if (providerData) {
+      try {
+        const provider = JSON.parse(providerData);
+        setUserName(provider.name || "");
+      } catch (e) {
+        console.error("Error parsing provider data", e);
+      }
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -75,12 +93,35 @@ function App() {
         <Route path="/SpHome" element={<SpHome />} />
         <Route path="/SpServiceDetails" element={<SpServiceDetails />} /> 
         <Route path="/SpConfirmation" element={<SpConfirmation />} /> 
+        <Route path="/PL" element={<ProviderLayout />} /> 
         <Route path="/SpDone" element={<SpDone/>} /> 
-        <Route path="/DashBoard" element={<DashBoard/>} /> 
-        <Route path="/SpProfile" element={<SpProfile/>} /> 
-        <Route path="/SpBookings" element={<SpBookings/>} /> 
-        <Route path="/SpNotif" element={<SpNotif/>} /> 
-        <Route path="/SpTrans" element={<SpTrans/>} /> 
+        <Route path="/Dashboard" element={
+          <ProviderLayout userName={userName}>
+            <DashBoard />
+          </ProviderLayout>
+        } />
+        <Route path="/SpProfile" element={
+          <ProviderLayout userName={userName}>
+            <SpProfile />
+          </ProviderLayout>
+        } />
+        <Route path="/SpBookings" element={
+          <ProviderLayout userName={userName}>
+            <SpBookings />
+          </ProviderLayout>
+        } />
+
+        <Route path="/SpNotif" element={
+          <ProviderLayout userName={userName}>
+            <SpNotif />
+          </ProviderLayout>
+        } />
+
+        <Route path="/SpTrans" element={
+          <ProviderLayout userName={userName}>
+            <SpTrans />
+          </ProviderLayout>
+        } />
         
       </Routes>
     </Router>

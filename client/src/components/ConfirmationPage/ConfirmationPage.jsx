@@ -117,8 +117,9 @@ const ConfirmationPage = () => {
         setState(prev => ({ ...prev, paymentMethod: method }));
     };
 
-    const createBookingData = (paymentStatus, paymentMethod) => {
+    const createBookingData = (paymentStatus, paymentMethod, paymentId = null) => {
         const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        const petData = JSON.parse(localStorage.getItem('selectedPet')) || {};
         
         return {
             id: `booking-${Date.now()}`,
@@ -128,23 +129,65 @@ const ConfirmationPage = () => {
                 email: userData.email,
                 phone: userData.phone
             },
+            pet: {
+                id: petData.id || null,
+                name: petData.name || 'Pet',
+                breed: petData.breed || 'Unknown breed',
+                age: petData.age || null,
+                gender: petData.gender || null
+            },
             provider: state.bookingDetails.provider,
-            service: state.bookingDetails.selectedService,
+            service: {
+                id: state.bookingDetails.selectedService.id || Date.now(),
+                name: state.bookingDetails.selectedService.name || state.bookingDetails.selectedService.service_name,
+                description: state.bookingDetails.selectedService.description || 'Professional pet care service',
+                price: state.bookingDetails.selectedService.price,
+                duration: state.bookingDetails.selectedService.duration || '30'
+            },
             date: state.bookingDetails.date,
             time: state.bookingDetails.time,
             status: 'confirmed',
             paymentStatus,
             paymentMethod,
+            paymentId: paymentId || (paymentMethod === 'online' ? `pay_${Date.now()}` : `cash_${Date.now()}`),
             amount: calculateTotalAmount(),
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         };
     };
-
+    
     const saveBookingToLocalStorage = (bookingData) => {
         try {
             const existingBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
-            const updatedBookings = [...existingBookings, bookingData];
-            localStorage.setItem('petCareBookings', JSON.stringify(updatedBookings));
+            
+            // Check if booking already exists (for updates)
+            const existingIndex = existingBookings.findIndex(b => b.id === bookingData.id);
+            
+            if (existingIndex >= 0) {
+                existingBookings[existingIndex] = bookingData;
+            } else {
+                existingBookings.push(bookingData);
+            }
+            
+            localStorage.setItem('petCareBookings', JSON.stringify(existingBookings));
+            
+            // Also save to transaction history if payment was made
+            if (bookingData.paymentStatus === 'paid' || bookingData.paymentMethod === 'cash') {
+                const paymentHistory = JSON.parse(localStorage.getItem('paymentHistory')) || [];
+                paymentHistory.push({
+                    id: bookingData.paymentId,
+                    bookingId: bookingData.id,
+                    amount: bookingData.amount,
+                    date: bookingData.createdAt,
+                    method: bookingData.paymentMethod,
+                    status: bookingData.paymentStatus,
+                    service: bookingData.service.name,
+                    providerId: bookingData.provider.id,
+                    userId: bookingData.user.id
+                });
+                localStorage.setItem('paymentHistory', JSON.stringify(paymentHistory));
+            }
+            
             return bookingData;
         } catch (error) {
             console.error('Error saving booking:', error);

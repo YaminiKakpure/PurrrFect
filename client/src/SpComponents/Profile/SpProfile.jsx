@@ -297,9 +297,9 @@ const SpProfile = () => {
   return (
     <div className={styles.profileContainer}>
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={() => navigate(-1)}>
+        {/* <button className={styles.backButton} onClick={() => navigate(-1)}>
           <ChevronLeft size={24} /> 
-        </button>
+        </button> */}
         <h1>My Profile</h1>
         <button 
           className={styles.editButton}

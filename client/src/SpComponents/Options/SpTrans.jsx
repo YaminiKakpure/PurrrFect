@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChevronLeft, Clock, Calendar, User, CreditCard, IndianRupeeIcon, CheckCircle, XCircle } from "lucide-react";
 import "./SpTrans.css";
-import { Clock, Calendar, User, CreditCard, DollarSign, CheckCircle, XCircle } from "lucide-react";
-import { ChevronLeft } from 'lucide-react';
+import axios from "axios";
 
 const SpTrans = () => {
   const navigate = useNavigate();
@@ -11,41 +11,90 @@ const SpTrans = () => {
   const [filters, setFilters] = useState({
     timePeriod: 'month',
     paymentMethod: 'all',
-    status: 'all'
+    status: 'all',
+    bookingStatus: 'all'
   });
 
-  // Fetch transactions from localStorage
+  // Function to fetch customer details by ID
+  const fetchCustomerDetails = async (customerId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/customers/${customerId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching customer details:", error);
+      return {
+        name: 'Customer',
+        email: 'Not provided',
+        phone: 'Not provided'
+      };
+    }
+  };
+
+  // Fetch transactions from localStorage and enrich with customer data
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       try {
+        // Get current provider info
+        const providerData = JSON.parse(localStorage.getItem('provider'));
+        if (!providerData || !providerData.id) {
+          throw new Error("Provider data not found in localStorage");
+        }
+
+        // Get all bookings from localStorage
         const storedBookings = JSON.parse(localStorage.getItem('petCareBookings')) || [];
-        const currentUserId = localStorage.getItem('userId');
         
-        // Process transactions from bookings
-        const providerTransactions = storedBookings
-          .filter(booking => booking.provider?.id === currentUserId)
-          .map(booking => ({
-            id: booking.id,
-            transactionId: booking.paymentId || `cash-${booking.id}`,
-            customer: {
-              name: booking.user?.name || 'Pet Owner',
-              phone: booking.user?.phone || 'Not provided',
-              email: booking.user?.email || 'Not provided'
-            },
-            pet: {
-              name: booking.pet?.name || 'Pet',
-              breed: booking.pet?.breed || 'Unknown breed'
-            },
-            service: booking.service?.name || 'Service',
-            date: booking.date,
-            time: booking.time,
-            amount: booking.amount || booking.service?.price || 0,
-            status: booking.paymentStatus || (booking.paymentMethod === 'online' ? 'paid' : 'pending'),
-            method: booking.paymentMethod || 'cash',
-            bookingStatus: booking.status
-          }));
-        
-        setTransactions(providerTransactions);
+        // Process transactions for this provider only
+        const enrichedTransactions = await Promise.all(
+          storedBookings
+            .filter(booking => {
+              if (!booking || !booking.provider) return false;
+              return booking.provider.id === providerData.id;
+            })
+            .map(async (booking) => {
+              // Fetch customer details from API
+              const customerDetails = booking.user?.id 
+                ? await fetchCustomerDetails(booking.user.id)
+                : {
+                    name: booking.user?.name || 'Customer',
+                    email: booking.user?.email || 'Not provided',
+                    phone: booking.user?.phone || 'Not provided'
+                  };
+
+              return {
+                id: booking.id,
+                transactionId: booking.paymentId || `cash_${booking.id}`,
+                customer: {
+                  id: booking.user?.id,
+                  name: customerDetails.name,
+                  phone: customerDetails.phone,
+                  email: customerDetails.email
+                },
+                service: {
+                  id: booking.service?.id || booking.selectedService?.id,
+                  name: booking.service?.name || booking.selectedService?.name || 'Service',
+                  description: booking.service?.description || booking.selectedService?.description,
+                  price: booking.service?.price || booking.selectedService?.price || 0,
+                  duration: booking.service?.duration || '30'
+                },
+                date: booking.date,
+                time: booking.time,
+                amount: booking.amount || booking.service?.price || 0,
+                status: booking.paymentStatus || (booking.paymentMethod === 'online' ? 'paid' : 'pending'),
+                method: booking.paymentMethod || 'cash',
+                bookingStatus: booking.status || 'confirmed',
+                createdAt: booking.createdAt || new Date().toISOString(),
+                updatedAt: booking.updatedAt || new Date().toISOString()
+              };
+            })
+        );
+
+        // Sort by date (newest first)
+        enrichedTransactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setTransactions(enrichedTransactions);
       } catch (error) {
         console.error("Error loading transactions:", error);
       } finally {
@@ -62,38 +111,33 @@ const SpTrans = () => {
     setFilters(prev => ({ ...prev, [filterType]: value }));
   };
 
-  const filteredTransactions = transactions.filter(transaction => {
-    // Time period filter
+  const filterByTimePeriod = (transaction, period) => {
     const now = new Date();
-    const transactionDate = new Date(transaction.date);
+    const transactionDate = new Date(transaction.date || transaction.createdAt);
     
-    if (filters.timePeriod === 'today' && 
-        !(transactionDate.getDate() === now.getDate() && 
-          transactionDate.getMonth() === now.getMonth() && 
-          transactionDate.getFullYear() === now.getFullYear())) {
-      return false;
+    switch (period) {
+      case 'today':
+        return (
+          transactionDate.getDate() === now.getDate() &&
+          transactionDate.getMonth() === now.getMonth() &&
+          transactionDate.getFullYear() === now.getFullYear()
+        );
+      case 'week':
+        return transactionDate >= new Date(now.setDate(now.getDate() - 7));
+      case 'month':
+        return transactionDate >= new Date(now.setMonth(now.getMonth() - 1));
+      case 'year':
+        return transactionDate >= new Date(now.setFullYear(now.getFullYear() - 1));
+      default:
+        return true;
     }
-    
-    if (filters.timePeriod === 'week' && 
-        transactionDate < new Date(now - 7 * 24 * 60 * 60 * 1000)) {
-      return false;
-    }
-    
-    if (filters.timePeriod === 'month' && 
-        transactionDate < new Date(now - 30 * 24 * 60 * 60 * 1000)) {
-      return false;
-    }
-    
-    // Payment method filter
-    if (filters.paymentMethod !== 'all' && transaction.method !== filters.paymentMethod) {
-      return false;
-    }
-    
-    // Status filter
-    if (filters.status !== 'all' && transaction.status !== filters.status) {
-      return false;
-    }
-    
+  };
+
+  const filteredTransactions = transactions.filter(transaction => {
+    if (!filterByTimePeriod(transaction, filters.timePeriod)) return false;
+    if (filters.paymentMethod !== 'all' && transaction.method !== filters.paymentMethod) return false;
+    if (filters.status !== 'all' && transaction.status !== filters.status) return false;
+    if (filters.bookingStatus !== 'all' && transaction.bookingStatus !== filters.bookingStatus) return false;
     return true;
   });
 
@@ -104,16 +148,20 @@ const SpTrans = () => {
       .reduce((sum, t) => sum + t.amount, 0),
     pendingPayments: transactions.filter(t => t.status === 'pending').length,
     onlinePayments: transactions.filter(t => t.method === 'online').length,
-    cashPayments: transactions.filter(t => t.method === 'cash').length
+    cashPayments: transactions.filter(t => t.method === 'cash').length,
+    completedBookings: transactions.filter(t => t.bookingStatus === 'confirmed').length,
+    cancelledBookings: transactions.filter(t => t.bookingStatus === 'cancelled').length
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-IN', options);
   };
 
   const formatTime = (timeString) => {
-    return timeString || '--:--';
+    if (!timeString) return '--:--';
+    return timeString.includes(':') ? timeString.split(':').slice(0, 2).join(':') : timeString;
   };
 
   const formatCurrency = (amount) => {
@@ -121,11 +169,11 @@ const SpTrans = () => {
       style: 'currency',
       currency: 'INR',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
+      maximumFractionDigits: 2
+    }).format(amount || 0);
   };
 
-  const getStatusIcon = (status) => {
+  const StatusIcon = ({ status }) => {
     switch (status) {
       case 'paid': return <CheckCircle size={16} color="#4CAF50" />;
       case 'pending': return <Clock size={16} color="#FF9800" />;
@@ -133,10 +181,10 @@ const SpTrans = () => {
     }
   };
 
-  const getPaymentMethodIcon = (method) => {
+  const PaymentMethodIcon = ({ method }) => {
     switch (method) {
-      case 'online': return <CreditCard size={16} />;
-      case 'cash': return <DollarSign size={16} />;
+      case 'online': return <CreditCard size={16} color="#3F51B5" />;
+      case 'cash': return <IndianRupeeIcon size={16} color="#4CAF50" />;
       default: return <CreditCard size={16} />;
     }
   };
@@ -154,30 +202,28 @@ const SpTrans = () => {
     <div className="sp-trans-container">
       {/* Header */}
       <div className="sp-trans-header">
-        <button onClick={() => navigate(-1)} className="back-button">
+        {/* <button onClick={() => navigate(-1)} className="back-button">
           <ChevronLeft size={24} />
-        </button>
+        </button> */}
         <h1>Payment Transactions</h1>
       </div>
 
       {/* Stats Overview */}
       <div className="sp-trans-stats">
         <div className="stat-card total-earnings">
-          <h3>Total Earnings</h3>
-          <p>{formatCurrency(stats.totalEarnings)}</p>
+          <h3>Total Earnings --  {formatCurrency(stats.totalEarnings)}</h3>
         </div>
         <div className="stat-card pending-payments">
-          <h3>Pending Payments</h3>
-          <p>{stats.pendingPayments}</p>
+          <h3>Pending Payments -- {stats.pendingPayments}</h3>
         </div>
         <div className="stat-card payment-methods">
           <div>
             <CreditCard size={16} />
-            <span>{stats.onlinePayments} online</span>
+            <h3>{stats.onlinePayments} online</h3>
           </div>
           <div>
-            <DollarSign size={16} />
-            <span>{stats.cashPayments} cash</span>
+            <IndianRupeeIcon size={16} />
+            <h3>{stats.cashPayments} cash</h3>
           </div>
         </div>
       </div>
@@ -228,9 +274,6 @@ const SpTrans = () => {
                   </div>
                   <div>
                     <h3>{transaction.customer.name}</h3>
-                    <p className="pet-info">
-                      {transaction.pet.name} • {transaction.pet.breed}
-                    </p>
                   </div>
                 </div>
                 <div className="transaction-amount">
@@ -248,7 +291,7 @@ const SpTrans = () => {
                 
                 <div className="detail-row">
                   <span className="detail-label">
-                    {getPaymentMethodIcon(transaction.method)} Method:
+                    <PaymentMethodIcon method={transaction.method} /> Method:
                   </span>
                   <span>
                     {transaction.method === 'online' ? 'Online Payment' : 'Cash Payment'}
@@ -260,7 +303,7 @@ const SpTrans = () => {
                 
                 <div className="detail-row">
                   <span className="detail-label">
-                    {getStatusIcon(transaction.status)} Status:
+                    <StatusIcon status={transaction.status} /> Status:
                   </span>
                   <span className={`status ${transaction.status}`}>
                     {transaction.status === 'paid' ? 'Completed' : 'Pending'}
@@ -270,7 +313,7 @@ const SpTrans = () => {
                 
                 <div className="detail-row">
                   <span className="detail-label">Service:</span>
-                  <span>{transaction.service}</span>
+                  <span>{transaction.service.name}</span>
                 </div>
               </div>
             </div>
@@ -278,6 +321,16 @@ const SpTrans = () => {
         ) : (
           <div className="no-transactions">
             <p>No transactions found matching your filters</p>
+            <button 
+              className="reset-filters"
+              onClick={() => setFilters({
+                timePeriod: 'all',
+                paymentMethod: 'all',
+                status: 'all'
+              })}
+            >
+              Reset Filters
+            </button>
           </div>
         )}
       </div>

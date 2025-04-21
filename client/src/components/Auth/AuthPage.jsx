@@ -29,7 +29,7 @@ const AuthPage = () => {
       fetchUserLocation(isNewUser);
     } else {
       // Navigate to different pages based on whether it's a new user
-      isNewUser ? navigate("/create-profile") : navigate("/HomePage");
+      isNewUser ? navigate("/Create-profile") : navigate("/HomePage");
     }
   };
 
@@ -44,18 +44,18 @@ const AuthPage = () => {
           saveLocationToBackend(latitude, longitude);
           
           // Navigate based on user type after saving location
-          isNewUser ? navigate("/create-profile") : navigate("/HomePage");
+          isNewUser ? navigate("/Create-profile") : navigate("/HomePage");
         },
         (error) => {
           console.log("Location fetch skipped:", error.message);
           // Navigate based on user type if location fetch fails
-          isNewUser ? navigate("/create-profile") : navigate("/HomePage");
+          isNewUser ? navigate("/Create-profile") : navigate("/HomePage");
         }
       );
     } else {
       console.log("Geolocation not supported");
       // Navigate based on user type if geolocation not supported
-      isNewUser ? navigate("/create-profile") : navigate("/HomePage");
+      isNewUser ? navigate("/Create-profile") : navigate("/HomePage");
     }
   };
 
@@ -147,8 +147,8 @@ const AuthPage = () => {
         localStorage.setItem("id", userId);
         localStorage.setItem("token", token);
         
-        // Pass true to indicate this is a new user (navigate to create-profile)
-        navigate("/create-profile");
+        // Pass true to indicate this is a new user (navigate to PetProfile)
+        navigate("/Create-profile");
       }
     } catch (error) {
       console.error("Signup error:", error);

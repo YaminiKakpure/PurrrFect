@@ -142,9 +142,9 @@ const SpBookings = () => {
     return (
         <div className="bookings-page">
             <div className="bookings-header">
-                <button className="back-button" onClick={() => navigate(-1)}>
+                {/* <button className="back-button" onClick={() => navigate(-1)}>
                     <ChevronLeft size={24} />
-                </button>
+                </button> */}
                 <h1>Pet Appointments</h1>
             </div>
 
