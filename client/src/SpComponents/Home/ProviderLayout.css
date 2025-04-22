@@ -22,7 +22,7 @@
   .dashboard-drawer {
     grid-column: 1;
     grid-row: 1 / span 2;
-    background-color: #f0a84d;
+    background-color: #b67e39;
     color: white;
     display: flex;
     flex-direction: column;
@@ -95,10 +95,10 @@
     align-items: center;
     gap: 12px;
     padding: 12px 20px;
-    background: rgba(255, 68, 0, 0.135);
+    background: rgba(255, 68, 0, 0.098);
     /* border-radius: 20%; */
     border: none;
-    color: #000000aa;
+    color: #ffffff;
     font-size: 15px;
     text-align: left;
     cursor: pointer;
@@ -107,7 +107,7 @@
   
   .drawer-nav li button:hover {
     background-color: rgba(255, 255, 255, 0.05);
-    color: white;
+    color: rgb(0, 0, 0) ;
   }
   
   .drawer-nav li.active button {
