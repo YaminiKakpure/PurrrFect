@@ -39,6 +39,8 @@ import SpProfile from "./SpComponents/Profile/SpProfile";
 import BookingsPage from "./components/SettingPages/BookingsPage";
 import BookingDetailsPage from "./components/SettingPages/BookingDetailsPage";
 import ProviderLayout from "./SpComponents/Home/ProviderLayout";
+import PetList from "./components/profile/PetList";
+import PetProfileView from "./components/profile/PetProfileView";
 
 function App() {
 
@@ -64,7 +66,9 @@ function App() {
         <Route path="/RoleSelect" element={<RoleSelection />} /> 
         <Route path="/AuthPage" element={<AuthPage />} />
         <Route path="/create-profile" element={<PetProfile />} />
-        <Route path="/edit-profile/:petId" element={<PetProfile />} />
+        <Route path="/edit-profile/:petId" element={<PetProfile />} /> 
+        <Route path="/view-profile/:petId" element={<PetProfileView />} />
+        <Route path="/pets" element={<PetList />} />
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/LocationSelection" element={<LocationSelection />} />
         <Route path="/OwnerProfile" element={<OwnerProfile />} />

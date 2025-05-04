@@ -67,12 +67,13 @@ const SpServiceDetails = () => {
         { name: "Extended Stay", price: "", duration: 4320 } // 3 days
       ]
     },
-    shop: {
-      placeholder: "Describe your pet products and categories available",
+    hotel: {
+      placeholder: "Describe your pet-friendly accommodations and amenities",
       defaultServices: [
-        { name: "Pet Food", price: "", duration: 0 },
-        { name: "Toys & Accessories", price: "", duration: 0 },
-        { name: "Health & Wellness", price: "", duration: 0 }
+        { name: "Pet-Friendly Room (Small Dog)", price: "", duration: 1440 }, // 24 hours
+        { name: "Pet-Friendly Room (Large Dog)", price: "", duration: 1440 },
+        { name: "Luxury Pet Suite", price: "", duration: 1440 },
+        { name: "Extended Stay Package", price: "", duration: 10080 } // 7 days
       ]
     }
   };
@@ -228,7 +229,7 @@ const SpServiceDetails = () => {
             <option value="grooming">Grooming</option>
             <option value="training">Training</option>
             <option value="hostelling">Boarding/Hostel</option>
-            <option value="shop">Pet Shop</option>
+            <option value="hotel">Pet Friendly Stays</option>
           </select>
           
           <textarea

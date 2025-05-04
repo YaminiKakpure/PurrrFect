@@ -1,177 +1,238 @@
-/* ProviderLayout.css - Non-scrollable layout styles */
+/* ProviderLayout.css - Non-scrollable layout styles with f08a4d theme */
 
 /* Base container - prevents scrolling on the entire layout */
 .dashboard-container {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    grid-template-rows: auto 1fr;
-    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
-    overflow: hidden; /* Disables scrolling on the entire container */
-    background-color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
-  }
-  
-  /* Mobile Header - Hidden on Desktop */
-  .mobile-header {
-    display: none;
-  }
-  
-  /* Side Drawer - Fixed size, non-scrollable */
-  .dashboard-drawer {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    background-color: #b67e39;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Disables scrolling */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-  }
-  
-  /* Main Content - Scrollable area */
-  .dashboard-content {
-    grid-column: 2;
-    grid-row: 2;
-    overflow-y: auto; /* Enables scrolling only for content */
-    height: calc(100vh - 0px); /* Adjust if you have a header */
-    padding: 20px;
-  }
-  
-  /* Drawer content styles */
-  .drawer-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .user-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-right: 1rem;
-  }
-  
-  .user-info h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  
-  .user-info p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #a0aec0;
-  }
-  
-  .drawer-nav {
-    flex: 1;
-    overflow-y: auto; /* Allows scrolling only for nav if needed */
-  }
-  
-  .drawer-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .drawer-nav li {
-    margin-bottom: 5px;
-  }
-  
-  .drawer-nav li button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    background: rgba(255, 68, 0, 0.098);
-    /* border-radius: 20%; */
-    border: none;
-    color: #ffffff;
-    font-size: 15px;
-    text-align: left;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  
-  .drawer-nav li button:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: rgb(0, 0, 0) ;
-  }
-  
-  .drawer-nav li.active button {
-    background-color: rgba(240, 168, 77, 0.2);
-    color: white;
-    border-left: 3px solid #f0a84d;
-  }
-  
-  .drawer-footer {
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .logout-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background-color: #f0a74d47;
-    border: none;
-    border-radius: 6px;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    font-weight: 600;
-  }
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
 
-  .logout-button:hover {
-    background-color: rgba(229, 62, 62, 0.503);
-    color: #000000;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .dashboard-container {
+/* Mobile Header - Hidden on Desktop */
+.mobile-header {
+  display: none;
+}
+
+/* Side Drawer - Fixed size, non-scrollable with f08a4d theme */
+.dashboard-drawer {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  background-color: #f08a4d; /* Primary color */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+/* Main Content - Scrollable area */
+.dashboard-content {
+  grid-column: 2;
+  grid-row: 2;
+  overflow-y: auto;
+  height: calc(100vh - 0px);
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Drawer content styles */
+.drawer-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #f08a4d;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 auto 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-info h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.user-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.drawer-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 10px;
+}
+
+.drawer-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.drawer-nav li {
+  margin-bottom: 5px;
+}
+
+.drawer-nav li button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin: 5px 0;
+}
+
+.drawer-nav li button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(3px);
+}
+
+.drawer-nav li.active button {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: white;
+  border-left: 3px solid white;
+  font-weight: 600;
+}
+
+.drawer-nav li button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+.drawer-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.logout-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.logout-button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
       grid-template-columns: 1fr;
       grid-template-rows: auto auto 1fr;
-    }
-    
-    .mobile-header {
+  }
+  
+  .mobile-header {
       display: flex;
       align-items: center;
       padding: 15px;
-      background-color: white;
+      background-color: #f08a4d;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       z-index: 20;
-    }
-    
-    .dashboard-drawer {
+      color: white;
+  }
+  
+  .mobile-header h1 {
+      margin-left: 15px;
+      font-size: 1.25rem;
+  }
+  
+  .menu-button {
+      color: white;
+  }
+  
+  .dashboard-drawer {
       position: fixed;
       top: 0;
       left: -280px;
       height: 100vh;
       transition: transform 0.3s;
-    }
-    
-    .dashboard-container.drawer-open .dashboard-drawer {
+  }
+  
+  .dashboard-container.drawer-open .dashboard-drawer {
       transform: translateX(280px);
-    }
-    
-    .dashboard-content {
+  }
+  
+  .dashboard-content {
       grid-column: 1;
       padding-top: 70px;
-    }
   }
+}
+
+/* Scrollbar styling */
+.drawer-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.drawer-nav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.drawer-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.dashboard-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+  background: #f08a4d;
+  border-radius: 4px;
+}

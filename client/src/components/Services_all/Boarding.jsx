@@ -42,7 +42,7 @@ const Boarding = () => {
                 
                 const response = await axios.get('/api/providers/services', {
                     params: {
-                        service_type: 'boarding',
+                        service_type: 'hostelling',
                         latitude: userLocation?.lat,
                         longitude: userLocation?.lng,
                         search: searchQuery

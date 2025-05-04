@@ -90,7 +90,7 @@ function HomePage() {
             </div>
             <div className="profile-details">
               <div className="profile-name">Bella</div>
-              <div className="profile-edit" onClick={() => navigate("/edit-profile/${petId}")}>
+              <div className="profile-edit" onClick={() => navigate("/pets")}>
                 Edit Profile
               </div>
             </div>

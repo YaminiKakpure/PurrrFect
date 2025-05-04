@@ -151,7 +151,7 @@ const OwnerProfile = () => {
               <path d="M15 18L9 12L15 6" stroke="#4A5568" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <h1 className="profile-title">Personal Details</h1>
+          <h1 className="profile-title">Pet Owners Details</h1>
         </div>
 
         {/* Avatar Section - Replaced Profile Image */}

@@ -49,24 +49,29 @@ const PetProfile = () => {
     const loadPetData = async () => {
       setIsLoading(true);
       try {
-        // Try local storage first
+        // Always check local storage first
         const localPets = JSON.parse(localStorage.getItem('pets')) || [];
-        const localPet = petId ? localPets.find(p => p.id === petId) : null;
-
-        if (localPet) {
-          setFormData({
-            name: localPet.name || '',
-            age: localPet.age || '',
-            species: localPet.species || '',
-            breed: localPet.breed || '',
-            gender: localPet.gender || '',
-            weight: localPet.weight || '',
-            medicalHistory: localPet.medicalHistory || '',
-            profileImage: localPet.profileImage || null
-          });
-          setPreferences(localPet.preferences || initialPreferences);
-        } else if (petId) {
-          await fetchPet();
+        
+        if (petId) {
+          // Editing existing pet - find in local storage
+          const localPet = localPets.find(p => p.id === petId);
+          
+          if (localPet) {
+            setFormData({
+              name: localPet.name || '',
+              age: localPet.age || '',
+              species: localPet.species || '',
+              breed: localPet.breed || '',
+              gender: localPet.gender || '',
+              weight: localPet.weight || '',
+              medicalHistory: localPet.medicalHistory || '',
+              profileImage: localPet.profileImage || null
+            });
+            setPreferences(localPet.preferences || initialPreferences);
+          } else {
+            // If not in local storage, try API
+            await fetchPet();
+          }
         } else {
           // New pet - reset form
           setFormData(initialFormData);
@@ -175,55 +180,32 @@ const PetProfile = () => {
     setIsSubmitting(true);
     
     try {
-      const formDataToSend = new FormData();
+      // For demo purposes, we'll use local storage only
+      // In a real app, you'd send to API first, then update local storage
       
-      // Append basic information
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null && key !== 'profileImage' && key !== 'profileImageFile') {
-          formDataToSend.append(key, value);
-        }
-      });
+      const petData = {
+        id: petId || Date.now().toString(), // Generate ID if new pet
+        ...formData,
+        preferences
+      };
       
-      // Append preferences
-      Object.entries(preferences).forEach(([key, value]) => {
-        if (value !== null && key !== 'bedPrescription' && key !== 'bedPrescriptionFile') {
-          formDataToSend.append(`preferences[${key}]`, value);
-        }
-      });
+      // Update local storage
+      const localPets = JSON.parse(localStorage.getItem('pets')) || [];
+      const existingIndex = localPets.findIndex(p => p.id === petData.id);
       
-      // Append files
-      if (formData.profileImageFile) {
-        formDataToSend.append('profileImage', formData.profileImageFile);
+      if (existingIndex >= 0) {
+        localPets[existingIndex] = petData;
+      } else {
+        localPets.push(petData);
       }
       
-      if (preferences.bedPrescriptionFile) {
-        formDataToSend.append('prescription', preferences.bedPrescriptionFile);
-      }
-      
-      const method = petId ? 'PUT' : 'POST';
-      const url = petId 
-        ? `http://localhost:3000/api/pets/${petId}`
-        : 'http://localhost:3000/api/pets';
-      
-      const response = await fetch(url, {
-        method,
-        body: formDataToSend
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to save pet');
-      }
-      
-      const savedPet = await response.json();
-      updateLocalStorage(savedPet);
+      localStorage.setItem('pets', JSON.stringify(localPets));
       
       toast.success(`Pet profile ${petId ? 'updated' : 'created'} successfully`);
       
-      // For new pets, navigate to home or pet list
-      if (!petId) {
-        navigate('/HomePage', { replace: true });
-      }
+      // Navigate after saving
+      navigate('/HomePage');
+      
     } catch (error) {
       toast.error(error.message || 'An error occurred while saving');
     } finally {

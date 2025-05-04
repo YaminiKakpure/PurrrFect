@@ -69,6 +69,102 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+
+/* Search Results Section - Desktop View */
+.search-results {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  border: 1px solid #eee;
+}
+
+.location-item {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.location-item:last-child {
+  border-bottom: none;
+}
+
+.location-item:hover {
+  background-color: #f9f9f9;
+}
+
+.location-details {
+  display: flex;
+  align-items: baseline;
+  flex-grow: 1;
+}
+
+.location-name {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.location-pincode {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.no-results {
+  padding: 1.5rem;
+  text-align: center;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Loading State */
+.loading-spinner {
+  border: 3px solid rgba(240, 138, 77, 0.2);
+  border-top: 3px solid #f08a4d;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-left: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.option-card.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Scrollbar styling for search results */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0 12px 12px 0;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: #f0a84d;
+  border-radius: 3px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: #e0973a;
+}
+
 /* Location Options - Centered Single Column Layout */
 .location-options {
   display: flex;
