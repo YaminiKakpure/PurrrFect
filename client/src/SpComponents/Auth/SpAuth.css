@@ -1,0 +1,210 @@
+/* Base Styles */
+.sp-auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Poppins', sans-serif;
+}
+
+.sp-auth-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.sp-auth-title {
+  text-align: center;
+  color: #f08a4d;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.sp-auth-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* Tabs */
+.sp-auth-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.sp-auth-tabs button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sp-auth-tabs button.active-tab {
+  color: #f08a4d;
+  border-bottom: 2px solid #f08a4d;
+}
+
+.sp-auth-tabs button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form Elements */
+.sp-auth-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.sp-auth-input:focus {
+  border-color: #f08a4d;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(240, 138, 77, 0.2);
+}
+
+.sp-auth-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Password Containers */
+.sp-password-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.sp-eye-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sp-eye-icon:hover {
+  color: #f08a4d;
+}
+
+/* File Upload */
+.sp-file-upload {
+  margin-bottom: 1.5rem;
+}
+
+.sp-file-upload-label {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sp-file-upload-label:hover {
+  border-color: #f08a4d;
+  background-color: #fff9f5;
+}
+
+.sp-upload-icon {
+  margin-right: 0.5rem;
+  color: #f08a4d;
+}
+
+/* Button */
+.sp-auth-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f08a4d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sp-auth-button:hover:not(:disabled) {
+  background-color: #e07d3e;
+}
+
+.sp-auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Divider */
+.sp-auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #888;
+}
+
+.sp-auth-divider::before,
+.sp-auth-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background-color: #eee;
+}
+
+.sp-auth-divider::before {
+  left: 0;
+}
+
+.sp-auth-divider::after {
+  right: 0;
+}
+
+/* Switch Text */
+.sp-auth-switch {
+  text-align: center;
+  color: #666;
+}
+
+.sp-auth-switch span {
+  color: #f08a4d;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.sp-auth-switch span:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .sp-auth-container {
+    padding: 1.5rem;
+    margin: 1rem;
+    box-shadow: none;
+    border: 1px solid #eee;
+  }
+  
+  .sp-auth-title {
+    font-size: 1.8rem;
+  }
+}

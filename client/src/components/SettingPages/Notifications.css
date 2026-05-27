@@ -1,0 +1,273 @@
+/* Notifications.css - Modern, clean notifications styling */
+
+/* Base container styling */
+.notificationsContainer {
+    max-width: 1400px;
+    width: 1350px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+  }
+  
+  /* Header styling */
+  .notificationsHeader {
+    margin-bottom: 2rem;
+    position: relative;
+    text-align: center;
+  }
+  
+  .notificationsHeader h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+  }
+  
+  .notificationsHeader p {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .backButton {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    transition: all 0.2s ease;
+  }
+  
+  .backButton:hover {
+    color: #2c3e50;
+    transform: translateX(-3px);
+  }
+  
+  /* Notifications content area */
+  .notificationsContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  /* Empty state styling */
+  .emptyState {
+    text-align: center;
+    padding: 3rem 0;
+    color: #95a5a6;
+  }
+  
+  .emptyState i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+  }
+  
+  .emptyState p {
+    font-size: 1.1rem;
+  }
+  
+  /* Notification card styling */
+  .notificationCard {
+    display: flex;
+    padding: 1.25rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Unread notification styling */
+  .notificationCard.unread {
+    background-color: #f8fafc;
+    border-left: 4px solid #6e8efb;
+    box-shadow: 0 2px 8px rgba(110, 142, 251, 0.15);
+  }
+  
+  /* Read notification styling */
+  .notificationCard.read {
+    background-color: white;
+    border-left: 4px solid #e0e0e0;
+    opacity: 0.9;
+  }
+  
+  .notificationCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notificationIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .notificationCard.unread .notificationIcon {
+    background-color: #e6f0ff;
+    color: #6e8efb;
+  }
+  
+  .notificationCard.read .notificationIcon {
+    background-color: #f5f5f5;
+    color: #95a5a6;
+  }
+  
+  .notificationIcon i {
+    font-size: 1rem;
+  }
+  
+  .notificationDetails {
+    flex: 1;
+  }
+  
+  .notificationDetails h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  
+  .notificationCard.unread h3 {
+    color: #2c3e50;
+  }
+  
+  .notificationCard.read h3 {
+    color: #7f8c8d;
+  }
+  
+  .notificationDetails p {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #34495e;
+  }
+  
+  .notificationCard.read p {
+    color: #95a5a6;
+  }
+  
+  .notificationDetails span {
+    font-size: 0.75rem;
+    color: #95a5a6;
+  }
+  
+  /* Unread badge */
+  .unreadBadge {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #6e8efb;
+    animation: pulse 2s infinite;
+  }
+  
+  /* Different colors for different notification types */
+  .notificationCard[data-type="payment"] {
+    border-left-color: #4CAF50;
+  }
+  
+  .notificationCard[data-type="payment"] .notificationIcon {
+    color: #4CAF50;
+    background-color: #e8f5e9;
+  }
+  
+  .notificationCard[data-type="payment"] .unreadBadge {
+    background-color: #4CAF50;
+  }
+  
+  .notificationCard[data-type="booking"] {
+    border-left-color: #2196F3;
+  }
+  
+  .notificationCard[data-type="booking"] .notificationIcon {
+    color: #2196F3;
+    background-color: #e3f2fd;
+  }
+  
+  .notificationCard[data-type="booking"] .unreadBadge {
+    background-color: #2196F3;
+  }
+  
+  .notificationCard[data-type="reminder"] {
+    border-left-color: #FF9800;
+  }
+  
+  .notificationCard[data-type="reminder"] .notificationIcon {
+    color: #FF9800;
+    background-color: #fff3e0;
+  }
+  
+  .notificationCard[data-type="reminder"] .unreadBadge {
+    background-color: #FF9800;
+  }
+  
+  .notificationCard[data-type="offer"] {
+    border-left-color: #9C27B0;
+  }
+  
+  .notificationCard[data-type="offer"] .notificationIcon {
+    color: #9C27B0;
+    background-color: #f3e5f5;
+  }
+  
+  .notificationCard[data-type="offer"] .unreadBadge {
+    background-color: #9C27B0;
+  }
+  
+  .notificationCard[data-type="info"] {
+    border-left-color: #607D8B;
+  }
+  
+  .notificationCard[data-type="info"] .notificationIcon {
+    color: #607D8B;
+    background-color: #eceff1;
+  }
+  
+  .notificationCard[data-type="info"] .unreadBadge {
+    background-color: #607D8B;
+  }
+  
+  /* Animations */
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(110, 142, 251, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(110, 142, 251, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(110, 142, 251, 0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .notificationsContainer {
+      padding: 1rem;
+      width: auto;
+    }
+    
+    .notificationCard {
+      padding: 1rem;
+    }
+    
+    .notificationIcon {
+      width: 36px;
+      height: 36px;
+      margin-right: 0.75rem;
+    }
+  }

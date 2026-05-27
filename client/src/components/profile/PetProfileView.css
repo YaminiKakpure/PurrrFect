@@ -1,0 +1,99 @@
+/* PetProfileView.css - Specific to Pet Profile View component only */
+.pet-profile-view {
+    max-width: 1350px;
+    width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .profile-header button {
+    background-color: #f0a84d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .profile-header button:hover {
+    background-color: #e0973a;
+  }
+  
+  .profile-header h1 {
+    color: #333;
+    margin: 0;
+  }
+  
+  .profile-content {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .pet-avatar {
+    flex: 0 0 250px;
+    height: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    color: #666;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pet-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .pet-details {
+    flex: 1;
+  }
+  
+  .pet-details h2 {
+    color: #333;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .detail-row {
+    display: flex;
+    margin-bottom: 15px;
+  }
+  
+  .detail-label {
+    flex: 0 0 180px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .detail-value {
+    flex: 1;
+    color: #333;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .profile-content {
+      flex-direction: column;
+    }
+    
+    .pet-avatar {
+      margin: 0 auto 20px;
+    }
+  }

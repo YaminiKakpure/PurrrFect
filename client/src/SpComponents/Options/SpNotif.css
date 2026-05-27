@@ -1,0 +1,244 @@
+/* SpNotif.css - Service Provider Notifications Page Styles */
+
+/* Page Container */
+.sp-notif-page {
+    max-width: 1400px;
+    width: 970px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2d3748;
+  }
+  
+  /* App Bar Styles */
+  .sp-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: none;
+    /* padding: 10px 0; */
+  }
+  
+  .sp-app-bar h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a5568;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    position: absolute;
+    left: 0;
+  }
+  
+  .back-button:hover {
+    background-color: #edf2f7;
+  }
+  
+  .delete-all-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e53e3e;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    position: absolute;
+    right: 0;
+  }
+  
+  .delete-all-button:hover {
+    background-color: #fff5f5;
+  }
+  
+  .delete-button-placeholder {
+    width: 36px; /* Matches the delete button size */
+  }
+  
+  /* Notifications List */
+  .sp-notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .notification-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notification-card.unread {
+    background-color: #f8fafc;
+    border-left: 4px solid #4299e1;
+  }
+  
+  .notification-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #ebf8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #3182ce;
+  }
+  
+  .notification-details {
+    flex-grow: 1;
+    min-width: 0; /* Prevent flex overflow */
+  }
+  
+  .notification-details h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a202c;
+  }
+  
+  .notification-details p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.4;
+  }
+  
+  .notification-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .timestamp {
+    font-size: 13px;
+    color: #718096;
+  }
+  
+  .delete-notification {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a0aec0;
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  
+  .delete-notification:hover {
+    color: #e53e3e;
+    background-color: #fff5f5;
+  }
+  
+  .unread-indicator {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4299e1;
+  }
+  
+  /* No Notifications State */
+  .no-notifications {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+    border: 1px dashed #e2e8f0;
+  }
+  
+  .no-notifications p {
+    color: #4a5568;
+    margin: 16px 0 0 0;
+    font-size: 16px;
+  }
+  
+  .no-notifications .subtext {
+    font-size: 14px;
+    color: #a0aec0;
+    margin-top: 8px;
+  }
+  
+  .empty-icon {
+    color: #cbd5e0;
+    margin-bottom: 10px;
+  }
+  
+  /* Loading State */
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #4299e1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 60px auto;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Notification Type Specific Colors */
+  .notification-card[data-type="booking"] .notification-icon {
+    background-color: #ebf8ff;
+    color: #3182ce;
+  }
+  
+  .notification-card[data-type="payment"] .notification-icon {
+    background-color: #ebf5ff;
+    color: #3c366b;
+  }
+  
+  .notification-card[data-type="cancellation"] .notification-icon {
+    background-color: #fff5f5;
+    color: #c53030;
+  }
+  
+  .notification-card[data-type="review"] .notification-icon {
+    background-color: #fffaf0;
+    color: #b7791f;
+  }
+  
+  .notification-card[data-type="system"] .notification-icon {
+    background-color: #faf5ff;
+    color: #6b46c1;
+  }

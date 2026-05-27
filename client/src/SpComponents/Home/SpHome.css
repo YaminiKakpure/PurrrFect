@@ -1,0 +1,209 @@
+  /* SpHome.css - Professional Desktop Design */
+.sp-home-page {
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff; /* Warm white background */
+  color: #333;
+}
+
+/* App Bar - Full Width */
+.sp-app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sp-app-bar-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #f08a4d; /* Brand orange color */
+}
+
+.sp-paw-icon {
+  font-size: 2rem;
+  color: #f08a4d; /* Matching brand color */
+}
+
+/* Hero Section - Warm Gradient */
+.sp-hero-section {
+  width: 100%;
+  padding: 5rem 5%;
+  background: linear-gradient(to right, #ffffff, #ffffff) !important; /* Warm gradient */
+  text-align: center;
+}
+
+.sp-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sp-hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #000000;
+}
+
+.sp-hero-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000000; /* Brand orange */
+  margin-bottom: 2rem;
+}
+
+.welcome-image {
+  max-width: 500px;
+  margin: 2rem auto 0;
+}
+
+.welcome-image img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 20px rgba(240, 138, 77, 0.2));
+}
+
+/* Service Section */
+.sp-service-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 5%;
+}
+
+.sp-service-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #333;
+  position: relative;
+}
+
+.sp-service-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: #f08a4d;
+  margin: 1rem auto 0;
+  border-radius: 2px;
+}
+
+.sp-service-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+  justify-content: center;
+}
+
+.sp-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(240, 138, 77, 0.1);
+  cursor: pointer;
+  min-height: 180px; /* Ensures consistent card height */
+}
+
+.sp-service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(240, 138, 77, 0.1);
+  border-color: rgba(240, 138, 77, 0.3);
+}
+
+.sp-service-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #f08a4d; /* Using your brand orange for all icons */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.sp-service-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  width: 100%;
+  word-break: break-word; /* Handles long service names */
+  padding: 0 0.5rem; /* Prevents text from touching edges */
+}
+
+/* Icon Colors */
+.healthcare {
+  color: #ff7e5f;
+}
+
+.grooming {
+  color: #6a11cb;
+}
+
+.training {
+  color: #2575fc;
+}
+
+.boarding {
+  color: #4caf50;
+}
+
+.hotels {
+  color: #f39c12;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .sp-service-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .sp-hero-title {
+    font-size: 2.2rem;
+  }
+  
+  .sp-hero-subtitle {
+    font-size: 1.5rem;
+  }
+  
+  .sp-service-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-app-bar-title {
+    font-size: 1.5rem;
+  }
+  
+  .sp-service-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .sp-service-card {
+    min-height: 160px;
+    padding: 1.5rem 1rem;
+  }
+
+  .sp-service-icon {
+    font-size: 2rem;
+  }
+  
+  .sp-service-name {
+    font-size: 1rem;
+  }
+
+}

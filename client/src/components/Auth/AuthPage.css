@@ -1,0 +1,196 @@
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Background Styling for AuthPage */
+.auth-page-background {
+    background: url('/bg2.jpg') no-repeat center center/cover;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Centered Auth Box with Responsive Sizing */
+.auth-container {
+    background: white;
+    padding: 39px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100% !important;
+    max-width: 400px; /* Ensures it doesn't get too wide on larger screens */
+    
+}
+
+/* Title */
+.auth-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #f08a4d;
+    margin-bottom: 20px;
+    white-space: nowrap;  /* Prevents text from wrapping */
+    overflow: hidden;      /* Ensures it stays within container */
+    text-overflow: ellipsis;
+}
+
+/* Tabs */
+.auth-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.auth-tabs button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: #f3f3f3;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s ease;
+}
+
+.auth-tabs button:hover {
+    background: #e6e6e6;
+}
+
+.auth-tabs .active-tab {
+    background: #f08a4d;
+    color: white;
+    font-weight: bold;
+}
+
+/* Input Fields */
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    margin: 14px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.auth-input:focus {
+    border-color: #f08a4d;
+    background: white;
+}
+
+/* Password Field with Eye Icon */
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.eye-icon:hover {
+    color: #f08a4d;
+}
+
+/* Sign Up / Sign In Button */
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #f08a4d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-button:hover {
+    background-color: #cd621c;
+    transform: scale(1.02);
+}
+
+/* Divider */
+.auth-divider {
+    font-size: 14px;
+    margin: 15px 0;
+    color: #777;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+}
+
+/* Google & Phone Buttons */
+.auth-alt-button {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.auth-alt-button:hover {
+    background-color: #f3f3f3;
+    transform: scale(1.02);
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.phone-icon {
+    color: #000000;
+}
+
+/* Switch Sign In / Sign Up */
+.auth-switch {
+    font-size: 14px;
+    margin-top: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-switch span {
+    color: #f08a4d;
+    font-weight: bold;
+    cursor: pointer;
+    transition: text-decoration 0.3s ease;
+}
+
+.auth-switch span:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .auth-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .auth-title {
+        font-size: 22px;
+    }
+
+    .auth-input, .auth-button, .auth-alt-button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

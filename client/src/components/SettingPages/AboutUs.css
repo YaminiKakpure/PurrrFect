@@ -1,0 +1,116 @@
+.aboutUsContainer {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+}
+
+.aboutUsHeader {
+    background-image: url('https://images.unsplash.com/photo-1601758003122-53c40e686a19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NTYyMDF8MHwxfHNlYXJjaHw4fHxoYXBweSUyMHBldHN8ZW58MHx8fHwxNzM5MzgxNjk0fDA&ixlib=rb-4.0.3&q=80&w=1080');
+    background-size: cover;
+    background-position: center;
+    padding: 24px;
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    position: relative;
+    height: 220px;
+}
+
+.aboutUsHeader h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+.aboutUsHeader p {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.backButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #ffffff !important;
+}
+
+.backButton:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.aboutUsContent {
+    margin-top: 24px;
+}
+
+.aboutUsContent h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 16px;
+}
+
+.aboutUsContent p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.servicesSection {
+    margin-top: 24px;
+}
+
+.servicesSection h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 16px;
+}
+
+.servicesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.serviceCard {
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.serviceCard:hover {
+    transform: translateY(-5px);
+}
+
+.contactSection {
+    margin-top: 24px;
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contactSection h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 16px;
+}
+
+.contactSection p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 8px;
+}
