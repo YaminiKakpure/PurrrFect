@@ -21,34 +21,44 @@
 }
 
 .profile-header {
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 2.5rem;
-  position: relative;
+  padding: 0 50px;
 }
 
 .back-button {
-  background: none;
+  position: absolute;
+  left: 0;
+
+  background-color: transparent !important;
   border: none;
+  box-shadow: none;
+  
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 50%;
-  transition: all 0.3s ease;
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .back-button:hover {
-  background-color: #edf2f7;
+  background-color: transparent !important;
 }
 
 .profile-title {
   font-size: 1.8rem;
   font-weight: 700;
   color: #2d3748;
-  margin: 0 auto;
+  margin: 0;
+  text-align: center;
+  width: 100%;
 }
+
 
 .profile-avatar-section {
   display: flex;

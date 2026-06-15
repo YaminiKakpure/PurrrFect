@@ -1,0 +1,9 @@
+steps
+server:
+npm install
+npm start
+node server.js
+
+client:
+npm install
+npm run dev
